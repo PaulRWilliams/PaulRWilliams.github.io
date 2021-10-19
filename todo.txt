@@ -1,0 +1,12 @@
+TODO
+* make sure size changes work
+* update the timeline with the change of attributes
+* update the list with the map and timeline selections
+* new data (with notes)
+
+
+* export query button
+* test new data (TEST)
+* document data ingest
+* document the rest of this thing
+* save font icon/color/type map to its own file (csv!)

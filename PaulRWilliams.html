@@ -1,0 +1,168 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Architectural Works by Paul R. Williams</title>
+
+    <!-- Style sheets -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+      integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+      crossorigin=""/>
+    <link  rel="stylesheet" href="https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.css" />
+    <link rel="stylesheet" href="./dist/css/leaflet.extra-markers.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+    <link rel="stylesheet" href="./prw.css" />
+    </head>
+
+    <body>
+      <!-- Map and List Section -->
+      <section class="section p-1 box">
+        <div class="columns is-gapless p-0 m-0">
+          <!-- The map column -->
+          <div class="column is-6 p-0 m-0 is-centered">
+            <!-- The map view buttons -->
+            <div class="columns is-gapless p-0 m-0 is-centered">
+              <div class="column is-1 p-0 m-0 "></div>
+              <div class="column is-4 p-0 m-0 ">
+                <button class="button is-small is-light" id="mapReset">Reset map to original viewpoint</button>
+              </div>
+              <div class="column is-4 p-0 m-0 is-centered">
+                <button class="button is-small is-light" id="mapZoom2Markers">Fit map to show all markers</button>
+              </div>
+            </div>
+            <div id="map"></div>
+          </div>
+
+          <!-- The list column -->
+          <div class="column is-6 p-0 m-0">
+            <!-- The list tabs -->
+            <div id="tabs-with-content p-0 m-0">
+              <div class="tabs is-boxed is-centered is-small">
+                <ul>
+                  <li id="info" class="is-active">
+                    <a>
+                      <span class="icon is-small"><i class="fas fa-info-circle" aria-hidden="true"></i></span>
+                      <span>Information</span>
+                    </a>
+                  </li>
+                  <li id="notes">
+                    <a>
+                      <span class="icon is-small"><i class="fas fa-sticky-note" aria-hidden="true"></i></span>
+                      <span>Notes</span>
+                    </a>
+                  </li>
+                  <li id="save">
+                    <a>
+                      <span class="icon is-small"><i class="fas fa-save" aria-hidden="true"></i></span>
+                      <span>Download Data</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <div class="section p-0 m-0">
+                  <div id="info-tab" class="tab-content is-active"><div id="info-table" class="table-div"></div></div>
+                  <div id="note-tab" class="tab-content"><div id="note-table" class="table-div"></div></div>
+                  <div id="save-tab" class="tab-content p-1 m-1">
+                    <div class="hero has-text-centered notification">Download Data</div>
+
+                    <div class="tile is-ancestor">
+                      <div class="tile is-horizontal">
+                        <div class="tile is-parent">
+                          <div class="tile is-child has-text-centered is-size-6">
+                            <!--Content here-->
+                              <br>
+                              <br>
+                              Download all data with no filtering as csv file.
+                            </div>
+                        </div>
+                        <div class="tile is-parent">
+                          <div class="tile is-child has-text-centered is-size-6">
+                            <!--Content here-->
+                              Download data filtered by timeline dates, client or building type, and map viewbox.
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="tile is-ancestor">
+                      <div class="tile is-horizontal">
+                        <div class="tile is-parent">
+                          <div class="tile is-child has-text-centered">
+                            <!--Content here-->
+                              <button class="button is-small is-light" id="allDownload">Download All Data</button>
+                            </div>
+                        </div>
+                        <div class="tile is-parent">
+                          <div class="tile is-child has-text-centered">
+                            <!--Content here-->
+                            <button class="button is-small is-light" id="filteredDownload">Download Filtered Data</button>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+
+
+                  </div>
+                </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Timeline Section -->
+      <section class="section p-0 m-0 box">
+        <div class="container p-0 m-0 is-fullhd">
+          <div class="control p-0 m-0 is-fullhd has-text-centered">
+            <label class="radio is-size-7">
+              <input type="radio" name="typeRadio" id="building" checked>
+              View by Building Type
+            </label>
+            <label class="radio is-size-7">
+              <input type="radio" name="typeRadio" id="client">
+              View by Client Type
+            </label>
+          </div>
+          <div id="timeline" class="is-fullhd p-0 m-0"/>
+        </div>
+      </section>
+
+      <!-- JS includes -->
+      <script src="https://d3js.org/d3.v6.min.js"></script>
+      <script src="d3-transform.js"></script>  <!---- DO I NEED THIS?? --->
+
+      <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+      <script src="https://kit.fontawesome.com/55ce5a10c9.js" crossorigin="anonymous"></script>
+      <script src="https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.js"></script>
+      <script defer src="https://use.fontawesome.com/releases/v5.12.0/js/all.js"></script>
+
+      <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+         integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+         crossorigin=""></script>
+      <script src="./dist/js/leaflet.extra-markers.min.js"></script>
+      <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster-src.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.20/lodash.min.js"></script>
+      <script src="https://unpkg.com/@mapbox/leaflet-pip@latest/leaflet-pip.js"></script>
+      <script src="https://unpkg.com/leaflet.featuregroup.subgroup@1.0.2/dist/leaflet.featuregroup.subgroup.js"></script>
+      <!-- my plotting functions -->
+      <script src="./utilities.js"></script>
+      <script src="./definitions.js"></script>
+      <script src="./state.js"></script>
+      <script src="./data.js"></script> <!-- The data set as JSON -->
+      <script src="./dataVariables.js"></script>
+      <script src="./svgDOMDefines.js"></script>
+      <script src="./interaction.js"></script>
+      <script src="./drive.js"></script>
+
+
+    <!--  <script src="./globals.js"></script>
+      <script src="./helperFunctions.js"></script>
+      <script src="./map.js"></script>
+      <script src="./timeline2.js"></script>-->
+
+  </body>
+
+</html>

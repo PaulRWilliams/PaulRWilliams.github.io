@@ -1,0 +1,202 @@
+/*** Top-level style ***/
+body {
+  font-family: Verdana;
+  font-size: 12pt;
+}
+
+/* The radio buttons */
+.select{
+    margin-right: 5;
+    margin-left: 12.5;
+    margin-top: -1px;
+    vertical-align: middle;
+}
+
+.radio-button{
+   width:10px;
+   height:10px;
+   font-size: 9pt;
+   -webkit-appearance: radio;
+}
+
+
+#timeline{
+    height:350px;
+}
+#map {
+  width:100%;
+  height:400px;
+  margin:0;
+  float: left;
+}
+
+
+.table-div{
+  /*border: 1px solid red;*/
+  overflow: auto;
+  height:350px
+}
+
+
+#svg-map{
+    background-color: pink;
+    border: none;
+}
+#svg-legend{
+  background-color: green;
+    border: solid;
+}
+
+/* The svg */
+#svg-chart {
+    background-color: white;
+    border: none;
+}
+
+/* Testing rects */
+.rect-out{
+    fill: White;
+    opacity: .75;
+    stroke: none;
+    stroke-width:.5px;
+
+}
+.rect{
+    fill: HoneyDew;
+    opacity: 0.25;
+    stroke: Gray;
+    stroke-width:.75px;
+}
+
+.rect-in{
+    fill: white;
+    opacity: 1;
+    stroke: gray;
+    stroke-width:.25px;
+}
+
+.legendRect{
+    fill: green;
+    opacity: 1.0;
+}
+
+/* Timeline styles */
+
+.timeline-dots{
+    stroke-width: 0.5px;
+    shape-rendering:geometricPrecision;
+}
+
+
+.timeline-text{
+    font-family: Verdana;
+    font-size: 10pt;
+    cursor: default;
+}
+
+.timelineRect{
+    fill: AliceBlue;
+    pointer-events: none;
+    opacity: .25;
+}
+
+.timelineSliderRect{
+    fill: AliceBlue;
+    stroke: silver;
+    stroke-width: 2.5px;
+    opacity: .25;
+    pointer-events: none;
+}
+.topGroup{
+    background-color: black;
+    border: solid;
+    border-width: 10px;
+}
+
+.timelineChart{
+ background-color: white;
+}
+
+/* Axes styles */
+.xaxis path,
+.xaxis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+.xaxis text{
+    font-family: Verdana;
+    font: 10pt sans-serif;
+}
+
+/* Guideline styles */
+.guideline{
+    background: red;
+    stroke: silver;
+    stroke-width: 2.5px;
+    stroke-linecap:"round";
+}
+.guideline text{
+    font-family: Verdana;
+    font: 12px sans-serif;
+    stroke: black;
+    stroke-width: .5px;
+}
+
+/* Timeline tooltip style */
+div.tooltip {
+    display:inline-block;
+    position: absolute;
+    text-align: center;
+    height: 50px;
+    padding: 4px;
+    font: 12px sans-serif;
+    background: gainsboro;
+    border: 0px;
+    border-radius: 4px;
+    pointer-events: none;
+}
+
+.mainGroup{
+    border-style: solid;
+    border-width: 5px;
+    background: lightsteelblue;
+}
+
+.textList{
+    font-family: Verdana;
+    font-size: 10pt;
+    overflow: auto;
+}
+
+.legend{
+    overflow: auto;
+}
+
+#tabs-with-content .tabs:not(:last-child) {
+  margin-bottom: 0;
+}
+
+#tabs-with-content .tab-content {
+  padding: 1rem;
+  display: none;
+}
+
+#tabs-with-content .tab-content.is-active {
+  display: block;
+}
+
+.tab-content {
+  padding: 1rem;
+  display: none;
+}
+
+.tab-content.is-active {
+  display: block;
+}
+/*
+.table &.is-scrollable tbody{
+    overflow-y: scroll;
+    width: auto;
+    position: absolute;
+  }*/
