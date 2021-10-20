@@ -194,9 +194,3 @@ div.tooltip {
 .tab-content.is-active {
   display: block;
 }
-/*
-.table &.is-scrollable tbody{
-    overflow-y: scroll;
-    width: auto;
-    position: absolute;
-  }*/
