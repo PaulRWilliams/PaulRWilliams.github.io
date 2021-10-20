@@ -198,64 +198,6 @@ function updateList (){
                   exit => exit.remove()
                 )
                 .attr("class", "is-size-7");
-
-
-
-/*
-   listSVG.attr("height", listText.length*14+12);
-
-   list.selectAll("g")
-   	.data(listText)
-   	.enter()
-   	.append("text")
-   	.attr("x", 5)
-   	.attr("y", function(d, i){ return i*14 + 12;})
-   	.text(function(d){ return d['text']; })
-   	.on("mouseover", function(d){
-
-   	    d3.select(this).attr("fill", "firebrick");
-
-   	    // Either open a popup or create one, if marker is in a cluster
-   	    map.eachLayer(function(l){
-
-   		// If we have a marker, show its popup
-   		if(l instanceof L.Marker){
-   		    if(l['feature']){
-   			if(l['feature']['properties']['name'] == d['name']){
-   			    l.openPopup();
-   			    return;
-   			}
-   		    }
-   		}
-   		// If we have a cluster group, make a new popup
-   		else if(l instanceof L.MarkerClusterGroup){
-   		     if(l._topClusterLevel){
-   			var markers = l._topClusterLevel.getAllChildMarkers();
-   			for(e in markers){
-   			    var mark = markers[e]['feature'];
-   			    if(mark['properties']['name'] == d['name']){
-   				// Make a fake pop-up
-   				var coord = mark['geometry']['coordinates'];
-   				var popup = L.popup()
-   				    .setLatLng([coord[1], coord[0]])
-   				    .setContent(mark['properties']['popupContent'])
-   				    .openOn(map);
-   				return;
-   			    }
-   			}
-   		    }
-   		}
-   	    });
-   	})
-   	.on("mouseout", function(d){
-   	    d3.select(this).attr("fill", "black");
-   	    //  Close popups using close buttons (if fake) or the current pop up
-   	    if($(".leaflet-popup-close-button")[0])
-   		$(".leaflet-popup-close-button")[0].click();
-   	    if (currentPopup._source)
-   		currentPopup._source.closePopup();
-   	});
-*/
  }
 
 // - -- -- - - --- - -- - - --- - ---- -- --- -- - -- -  //
@@ -506,13 +448,14 @@ function updateTimelineData(){
 // Change the size of the timeline based on the window size
 function timelineSizeChange(){
 
-     var wide = container.width,
-         high = container.height;
+
+     var wide = parseInt(container.style("width")),
+         high = parseInt(container.style("height"));
      var scale = wide/outerWidth;
 
      // Math out the dimensions of the plot
-     outerWidth = container.width;
-     outerHeight = container.height;
+     outerWidth = parseInt(container.style("width"));
+     outerHeight = parseInt(container.style("height"));
      width = outerWidth - margin.left - margin.right;
      height = outerHeight - margin.top - margin.bottom;
      innerWidth = width - padding.left - padding.right;
@@ -543,7 +486,7 @@ function timelineSizeChange(){
 
      // Update the DOM elements that change with a size change
      d3.select(".mainGroup").attr("transform", "scale(" + scale + ")");
-     $("#svg-chart").height(wide*(1.0/aspect));
+     d3.select("#svg-chart").style("height", wide*(1.0/aspect));
 
      // Position the x axis
      axisGroup.attr("transform", "translate(0," + endInY +")");

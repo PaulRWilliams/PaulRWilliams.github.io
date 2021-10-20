@@ -25,7 +25,6 @@ let tileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/light
 
 let markerGroups = {};
 for(let att in mapMarkerDefinitions){
-  console.log("m", att);
   markerGroups[att] = {};
   for(let type in mapMarkerDefinitions[att]){
     let color = mapMarkerDefinitions[att][type]['color'];
@@ -174,8 +173,9 @@ function date2Pos(date) {
               .append("svg")
               .attr("id", "svg-chart")
               .attr("width", "100%");
- // The div holding the chart
- var container = d3.select("#svg-chart").node().parentNode.getBoundingClientRect();
+
+ // The div holding the svg chart
+ var container = d3.select("#timeline");
 
  // The top-level group for the timeline
  var mainGroup = svg.append("g").attr("class", "mainGroup");
@@ -298,7 +298,7 @@ var startRect = startGuide.append("rect")
                        .style("stroke","none")
                        .style("fill","url(#gradEnd)");
  // The drag behaviors
- var startGuideDrag = d3.drag().on("start", function(){ startLine.attr("stroke", "DarkSlateGray"); $(".leaflet-popup-close-button").click(); })
+ var startGuideDrag = d3.drag().on("start", function(){startLine.attr("stroke", "DarkSlateGray");})
                                .on("end", function(){ startLine.attr("stroke", "silver"); updateMapMarkers();});
  startGuide.call(startGuideDrag);
  startCircle.call(startGuideDrag);

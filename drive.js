@@ -17,7 +17,7 @@ timelineSizeChange();
 
 
 // Set the resize function
-//d3.select(window).on("resize", timelineSizeChange);
+d3.select(window).on("resize", timelineSizeChange);
 
 // Add the current marker layers
 //currentMarkerLayers = addMapMarkers(currentAttribute,
