@@ -175,7 +175,8 @@ function date2Pos(date) {
               .attr("id", "svg-chart")
               .attr("width", "100%");
  // The div holding the chart
- var container = $("#svg-chart").parent();
+ var container = d3.select("#svg-chart").node().parentNode.getBoundingClientRect();
+
  // The top-level group for the timeline
  var mainGroup = svg.append("g").attr("class", "mainGroup");
  // Create the timeline chart

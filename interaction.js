@@ -506,13 +506,13 @@ function updateTimelineData(){
 // Change the size of the timeline based on the window size
 function timelineSizeChange(){
 
-     var wide = container.width(),
-         high = container.height();
+     var wide = container.width,
+         high = container.height;
      var scale = wide/outerWidth;
 
      // Math out the dimensions of the plot
-     outerWidth = container.width();
-     outerHeight = container.height();
+     outerWidth = container.width;
+     outerHeight = container.height;
      width = outerWidth - margin.left - margin.right;
      height = outerHeight - margin.top - margin.bottom;
      innerWidth = width - padding.left - padding.right;
