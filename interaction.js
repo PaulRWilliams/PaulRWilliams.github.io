@@ -4,6 +4,33 @@
 // 10/02/2021
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+document.getElementById("mybtn").addEventListener("click", function(){
+       var newWindowContent = document.getElementById('info-table').innerHTML;
+       var newWindow = window.open("", "", "width=500,height=400");
+       newWindow.document.write(newWindowContent);
+       var link = document.getElementById('info-table');
+       link.style.display = 'none'; //or
+       link.style.visibility = 'hidden';
+});
+
+document.getElementById("saveDataButton").addEventListener("click", function(){
+       var newWindowContent = document.getElementById('saveData').innerHTML;
+
+       var cssNode = document.createElement('link');
+        cssNode.type = 'text/css';
+        cssNode.rel = 'stylesheet';
+        cssNode.href = 'https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css';
+        cssNode.media = 'screen';
+        cssNode.title = 'dynamicLoadedSheet';
+
+       var newWindow = window.open("", "", "width=500,height=400");
+       newWindow.document.getElementsByTagName("head")[0].appendChild(cssNode);
+       newWindow.document.write(newWindowContent);
+
+});
+
+
+
 // - -- -- - - --- - -- - - --- - ---- -- --- -- - -- -  //
 // Map
 // - -- -- - - --- - -- - - --- - ---- -- --- -- - -- -  //
@@ -91,7 +118,7 @@ function updateMapMarkers(){
 }*/
 
 // Add event listeners to the tabs to change content
-let tabsWithContent = (function () {
+/*let tabsWithContent = (function () {
 
   // Get the tabs and tabs content
   let tabs = document.querySelectorAll('.tabs li');
@@ -135,6 +162,8 @@ let tabsWithContent = (function () {
   tabs[0].click();
 })();
 
+*/
+
 function updateList (){
 
   currentMapZoom = map.getZoom();
@@ -177,7 +206,7 @@ function updateList (){
                  )
                  .attr("class", "is-size-7");
 
-
+/*
  // Add the rows and columns to the info table
  let note_rows = noteTablebody.selectAll("tr")
                      .data(currentData)
@@ -198,6 +227,7 @@ function updateList (){
                   exit => exit.remove()
                 )
                 .attr("class", "is-size-7");
+                */
  }
 
 // - -- -- - - --- - -- - - --- - ---- -- --- -- - -- -  //
@@ -525,7 +555,7 @@ function timelineSizeChange(){
 function changeAttribute(event) {
      let byTypeAttribute = event.target.id;
      currentAttribute = attributes[byTypeAttribute];
-     currentTypes = Object.keys(mapMarkerDefinitions[currentAttribute]);
+     currentTypes = Object.keys(iconMap[currentAttribute]);
 
      // Update the map marker layers
       updateMapMarkers();

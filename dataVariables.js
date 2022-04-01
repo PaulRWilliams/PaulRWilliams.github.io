@@ -17,7 +17,7 @@ const datesCount = _.countBy(dates);
 currentDates = [string2Date(distinctDates[0]-1), string2Date(distinctDates[distinctDates.length-1]+2)];
 
 // The current types of markers we're looking at
-currentTypes = Object.keys(mapMarkerDefinitions[currentAttribute]);
+currentTypes = Object.keys(iconMap[currentAttribute]);
 
 // Get the dates count by attribute type
 var datesByAttribute = {};
@@ -30,7 +30,7 @@ for(types in attributes){
     if(!(type in datesByAttribute[t])){
       datesByAttribute[t][type] = {"data":{},
                                    "display":true,
-                                   "color": mapMarkerDefinitions[t][type]["color"],
+                                   "color": iconMap[t][type]["color"],
                                    "label":type
                                    };
     }
@@ -40,7 +40,7 @@ for(types in attributes){
     let tmp = _.countBy(datesByAttribute[t][type]["data"].map(d=>d.Date));
     datesByAttribute[t][type]["data"] = {}
     for( i in tmp){
-      datesByAttribute[t][type]["data"][i]={"idx":j, "count":tmp[i], "color":mapMarkerDefinitions[t][type]["color"], "type":type};
+      datesByAttribute[t][type]["data"][i]={"idx":j, "count":tmp[i], "color":iconMap[t][type]["color"], "type":type};
     }
   });
 }
@@ -57,7 +57,7 @@ for(d in data){
 
     let date = data[d]['Date'];
     let type = data[d][att];
-    let color = mapMarkerDefinitions[att][data[d][att]].color;
+    let color = iconMap[att][data[d][att]].color;
 
     if(!(markerClusterArrays[att][date]))
       markerClusterArrays[att][date]={}

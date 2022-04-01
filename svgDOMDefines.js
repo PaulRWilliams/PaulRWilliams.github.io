@@ -24,10 +24,10 @@ let tileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/light
                         ).addTo(map);
 
 let markerGroups = {};
-for(let att in mapMarkerDefinitions){
+for(let att in iconMap){
   markerGroups[att] = {};
-  for(let type in mapMarkerDefinitions[att]){
-    let color = mapMarkerDefinitions[att][type]['color'];
+  for(let type in iconMap[att]){
+    let color = iconMap[att][type]['color'];
     markerGroups[att][type] = L.markerClusterGroup({
       maxClusterRadius: 20,
       spiderfyOnMaxZoom:true,
@@ -68,7 +68,7 @@ info_header.selectAll("th")
   .text((d)=>(d));
 let infoTablebody = info_table.append("tbody");
 
-
+/*
 let note_table = d3.select("#note-table")
   .append("table")
   .attr("class", "table is-striped is-fullwidth is-hoverable is-bordered is-scrollable p-0 m-0");
@@ -81,7 +81,7 @@ note_header.selectAll("th")
   .style("text-align", "left")
   .text((d)=>(d));
 let noteTablebody = note_table.append("tbody");
-
+*/
 
  // - -- -- - - --- - -- - - --- - ---- -- --- -- - -- -  //
  // The timeline
