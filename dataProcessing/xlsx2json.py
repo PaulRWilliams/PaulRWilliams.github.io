@@ -4,7 +4,7 @@
 # Written by Kristi Potter (kristi.potter@gmail.com)
 # 10/02/2021
 #
-# Usage: python xlsx2json.js
+# Usage: python xlsx2json.py dataFile.xlsx
 # Outfile: data.js
 #
 # This script assumes python version 3 is available with pandas.
