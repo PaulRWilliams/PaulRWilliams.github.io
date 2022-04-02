@@ -36,8 +36,8 @@ document.getElementById("saveDataButton").addEventListener("click", function(){
 // - -- -- - - --- - -- - - --- - ---- -- --- -- - -- -  //
 
 // When the map moves, update the list
-map.on('move', function() {updateList();})
-   .on('zoom', function() {updateList();});
+//map.on('move', function() {updateList();})
+//   .on('zoom', function() {updateList();});
 
 function updateMapMarkers(){
 

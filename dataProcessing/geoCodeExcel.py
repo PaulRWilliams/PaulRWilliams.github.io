@@ -70,11 +70,13 @@ def geoCodeExcel(file, sheetname):
             df.at[index,'Generated Lat'] = response[0]["lat"]
             df.at[index,'Generated Lon'] = response[0]["lon"]
 
+    # Convert the generated lat/lon columns to numbers
+    df['Generated Lat'] = pd.to_numeric(df['Generated Lat'])
+    df['Generated Lon'] = pd.to_numeric(df['Generated Lon'])
+
+
     # Write to a new excel file
     df.to_excel(outfile)
-
-    # Save as csv
-    df.to_csv('data.csv')
 
     # Write out any addresses not found
     if(len(not_found) > 0):

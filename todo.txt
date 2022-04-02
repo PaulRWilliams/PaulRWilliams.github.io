@@ -1,6 +1,22 @@
 TODO
-* make sure size changes work - mobile?
-* Fix data download text
-* make sure all of the code is actually used
-* remove unused files
-* can we add Daisy (and UO dev) as contributor to github?
+* don't update list with map moving
+* make responsive (mobile?)
+* how to deal with list in a more useful way
+* document automatic addressing -> data.js (put files into new folder)
+* download data - all of the data or filtered?
+* clean up code
+  - make sure all of the code is actually used
+  - put utility code into folders
+  - remove unused files
+  - fully document
+
+daisy todo 
+* new data
+* icons & colors for client type
+
+Done
+-----
+* Update colors and icons for buildings
+* Converge lists to one list
+* Update list only when timeline changed
+* add Daisy (and UO dev) as contributor to github [done]
