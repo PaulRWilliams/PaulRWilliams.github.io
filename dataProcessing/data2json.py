@@ -16,12 +16,11 @@ import pandas as pd
 # Function to convert a CSV to JSON saved as a js file
 def make_json(file):
 
-
     # Read in data.csv
     #csv = pd.read_csv('data.csv').replace('"','\"', regex=True)
 
     # Read in the data
-    df = pd.read_excel(file)
+    df = pd.read_excel(file, engine='openpyxl')
 
     # Drop all columns that are Unnamed
     df = df.loc[:, ~df.columns.str.contains('^Unnamed')]

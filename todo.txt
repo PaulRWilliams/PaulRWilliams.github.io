@@ -1,6 +1,15 @@
 TODO
 
-* make responsive (mobile?)
+8/22/2022
+---
+* fix map reset/bounds
+* play with icon colors
+* icon clustering still hiding stuff (Las Vegas)
+* Add about text and all that stuff
+
+
+old
+-----
 * how to deal with list in a more useful way
 * download data - all of the data or filtered?
 * clean up code
@@ -10,8 +19,10 @@ TODO
   - fully document
 
 daisy todo
+---
 * new data
 * icons & colors for client type
+
 
 Done
 -----
@@ -21,3 +32,6 @@ Done
 * add Daisy (and UO dev) as contributor to github [done]
 * don't update list with map moving
 * document automatic addressing -> data.js (put files into new folder)
+* make responsive (mobile?)
+* what is up with the colors??
+ - make sure its updated from spreadsheet?

@@ -27,9 +27,18 @@ var currentMapZoom;
 
 var initState = true;
 
+// Toggle the open table in new window button
+var openWindowButtonClicks = 0;
+
+// The new window we create for the table
+var newWindow = undefined;
+
+// Toggle the cluster button
+var clusterButtonClicks = 0;
+
 // Constant dimension variables for timeline
-const margin = {top: 15, right: 25, bottom: 25, left: 10},
-      padding = {top: 15, right: 175, bottom: 45, left: 10};
+const margin = {top: 12, right: 25, bottom: 5, left: 10},
+      padding = {top: 10, right: 10, bottom: 10, left: 10};
 const startX = margin.left,
       startY = margin.top,
       startInX = startX + padding.left,

@@ -4,32 +4,96 @@
 // 10/02/2021
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-document.getElementById("mybtn").addEventListener("click", function(){
-       var newWindowContent = document.getElementById('info-table').innerHTML;
-       var newWindow = window.open("", "", "width=500,height=400");
-       newWindow.document.write(newWindowContent);
-       var link = document.getElementById('info-table');
-       link.style.display = 'none'; //or
-       link.style.visibility = 'hidden';
+// - -- -- - - --- - -- - - --- - ---- -- --- -- - -- -  //
+// Button actions
+// - -- -- - - --- - -- - - --- - ---- -- --- -- - -- -  //
+document.getElementById("openButton").addEventListener("click", function(){
+
+  // Open the new window
+  if(openWindowButtonClicks %2 === 0){
+
+    // Change the button text
+    document.getElementById("openButton").innerHTML =   '<span class="icon is-small"><i class="fas fa-window-maximize" aria-hidden="true"></i></span> <span>Put Table Back into Page</span>';
+
+    // Open a new window
+    var newWindowContent = document.getElementById('info-table').innerHTML;
+    newWindow = window.open("", "", "width=500,height=400");
+    newWindow.document.write('<head><meta charset="UTF-8"><title>Architectural Works by Paul R. Williams</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css"/><link rel="stylesheet" href="./css/prw.css" /></head>')
+    newWindow.document.write(newWindowContent);
+
+    // Put the table back if we close this new window
+    newWindow.addEventListener("beforeunload", function (e) {
+
+      // Change the button text
+      document.getElementById("openButton").innerHTML =   '<span class="icon is-small"><i class="fas fa-window-restore" aria-hidden="true"></i></span> <span>Open Table in New Window</span>';
+
+      // Show the table
+      var table = document.getElementById('info-table');
+      table.style.display = 'block';
+
+      // Shrink the map
+      var map = document.getElementById('map-column');
+      map.classList.add("is-6");
+      map.classList.remove("is-full")
+    });
+
+
+    // Hide the table
+    var table = document.getElementById('info-table');
+    table.style.display = 'none';
+
+    // Expand the map
+    var map = document.getElementById('map-column');
+    map.classList.remove("is-6");
+    map.classList.add("is-full")
+  }
+  // Close the new window
+  else{
+
+    // Change the button text
+    document.getElementById("openButton").innerHTML =   '<span class="icon is-small"><i class="fas fa-window-restore" aria-hidden="true"></i></span> <span>Open Table in New Window</span>';
+
+    // Close the window
+    newWindow.close();
+
+    // Show the table
+    var table = document.getElementById('info-table');
+    table.style.display = 'block';
+
+    // Shrink the map
+    var map = document.getElementById('map-column');
+    map.classList.add("is-6");
+    map.classList.remove("is-full")
+  }
+
+   // Update the number of clicks
+   openWindowButtonClicks = openWindowButtonClicks+1;
 });
 
 document.getElementById("saveDataButton").addEventListener("click", function(){
-       var newWindowContent = document.getElementById('saveData').innerHTML;
-
-       var cssNode = document.createElement('link');
-        cssNode.type = 'text/css';
-        cssNode.rel = 'stylesheet';
-        cssNode.href = 'https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css';
-        cssNode.media = 'screen';
-        cssNode.title = 'dynamicLoadedSheet';
-
-       var newWindow = window.open("", "", "width=500,height=400");
-       newWindow.document.getElementsByTagName("head")[0].appendChild(cssNode);
-       newWindow.document.write(newWindowContent);
-
+  exportToCSV(data);
 });
 
+document.getElementById("clusterButton").addEventListener("click", function(){
 
+  // Open the new window
+  if(clusterButtonClicks %2 === 0){
+
+    // Change the button text
+    document.getElementById("clusterButton").innerHTML = '<span class="icon is-small"><i class="fas fa-text-height" aria-hidden="true"></i></span><span>Cluster Markers by Type</span>';
+
+  }
+  // Close the new window
+  else{
+
+      // Change the button text
+    document.getElementById("clusterButton").innerHTML = '<span class="icon is-small"><i class="fas fa-location-arrow" aria-hidden="true"></i></span> <span>Cluster Markers by Location</span>';
+
+  }
+
+   // Update the number of clicks
+   clusterButtonClicks = clusterButtonClicks+1;
+});
 
 // - -- -- - - --- - -- - - --- - ---- -- --- -- - -- -  //
 // Map
@@ -91,6 +155,7 @@ function updateMapMarkers(){
   // If this is the first time we run, save the bounds
   if(initState){
     defaultBounds = bounds;
+    console.log("bounds", bounds);
     map.fitBounds(defaultBounds);
     initState = false;
   }
@@ -477,7 +542,7 @@ function updateTimelineData(){
 
 // Change the size of the timeline based on the window size
 function timelineSizeChange(){
-
+  console.log("wide", container.style("width"))
 
      var wide = parseInt(container.style("width")),
          high = parseInt(container.style("height"));
@@ -568,81 +633,24 @@ document.querySelectorAll("input[name='typeRadio']").forEach((input) => {
   });
 
 // Function to reset the map to the default view
-function setDefaultMapView(){
-  map.fitBounds(defaultBounds);
-}
-document.getElementById('mapReset').onclick = setDefaultMapView;
+//function setDefaultMapView(){
+//  map.fitBounds(defaultBounds);
+//}
+//document.getElementById('mapReset').onclick = setDefaultMapView;
 
 // Function to set the map view to the filtered data
-function setMapView2Markers(){
-  map.fitBounds(markerBounds, { padding: [5, 5] });
-}
-document.getElementById('mapZoom2Markers').onclick = setMapView2Markers;
+//function setMapView2Markers(){
+//  map.fitBounds(markerBounds, { padding: [5, 5] });//
+//}
+//document.getElementById('mapZoom2Markers').onclick = setMapView2Markers;
 
 // Function to save all the data
-function saveAllData(){
-
-  console.log("save data", data);
-  downloadCSVFromJson("prw_full_dataset.csv", data);
-}
-document.getElementById('allDownload').onclick = saveAllData;
+//document.getElementById('allDownload').onclick = saveAllData;
 
 // Function to save filtered data
-function saveFilteredData(){
-  console.log("save filtered data", currentData);
-  downloadCSVFromJson("prw_filtered_dataset.csv", currentData);
-
-}
-document.getElementById('filteredDownload').onclick = saveFilteredData;
-
-
-// Set the position and text of start guide
-var setStartGuide = function(){
-
-  let startDate = currentDates[0];
-  let startDatePosition = date2Pos(currentDates[0]);
-
-  // Move the timeline guides and update its text
-  startGuide.attr("transform", "translate(" + startDatePosition + ", 0)");
-  startText.text(date2String(startDate));
-
-  // Calculate and set the width of the selected timeline
-  var timeWidth =  date2Pos(currentDates[1]) - startDatePosition;
-  if (timeWidth < 0)
-	   timeWidth = 0;
-  timelineRect.attr("x", startDatePosition)
-              .attr("width", timeWidth);
-
-  // Set the location of the time slider end point
-  startCircle.attr("cx", startDatePosition);
-
-  // Set the rectangle showing the data NOT selected
-  startRect.attr("x", -startDatePosition+date2Pos(xScale.domain()[0]))
-           .attr("width", startDatePosition-date2Pos(xScale.domain()[0]));
-
-}
-
-// Set the position and text of the end guide
-var setEndGuide = function(){
-
-  let endDate = currentDates[1];
-  let endDatePosition = date2Pos(currentDates[1]);
-
-  // Move the timeline guides and update its text
-  endGuide.attr("transform", "translate(" +  endDatePosition + ", 0)");
-  endText.text(date2String(endDate));
-
-  // Calculate and set the width of the selected timeline
-  var timeWidth =  endDatePosition -  date2Pos(currentDates[0]);
-  if(timeWidth < 0)
-     timeWidth = 0;
-
-  timelineRect.attr("width", timeWidth);
-
-  // Set the location of the time slider end point
-  endCircle.attr("cx", endDatePosition);
-
-  // Set the rectangle showing the data NOT selected
-  endRect.attr("x", 0)
-    .attr("width", date2Pos(xScale.domain()[1])-endDatePosition);
- }
+// function saveFilteredData(){
+//   console.log("save filtered data", currentData);
+//   downloadCSVFromJson("prw_filtered_dataset.csv", currentData);
+//
+// }
+//document.getElementById('filteredDownload').onclick = saveFilteredData;
