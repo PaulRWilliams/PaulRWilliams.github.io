@@ -9,18 +9,6 @@
 var initState = true;
 
 // --- Windowing variables
-// Constant dimension variables for timeline
-const margin = {top: 12, right: 25, bottom: 5, left: 10},
-      padding = {top: 10, right: 125, bottom: 10, left: 10};
-const startX = margin.left,
-      startY = margin.top,
-      startInX = startX + padding.left,
-      startInY = startY + padding.top;
-
-// Dimension variables that depend on the window size >>> These change in timelineSizeChange
-var outerWidth, outerHeight, innerWidth, innerHeight,
-    width, height;
-var endX, endY, endInX, endInY, aspect;
 
 // Toggle the open table in new window button
 var openWindowButtonClicks = 0;

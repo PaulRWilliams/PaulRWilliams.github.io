@@ -125,6 +125,7 @@ is-secondary {
   border: solid;
   border-width:.5px;
   border-radius: 5px;
+  border-color: Silver;
   z-index: 0;
 }
 
@@ -136,6 +137,7 @@ is-secondary {
   border: solid;
   border-width:.5px;
   border-radius: 5px;
+  border-color: Silver;
 }
 #timeline{
     height:350px;
@@ -144,11 +146,13 @@ is-secondary {
   background-color: white;
   width:100%;
 
+  margin-top: 0rem;
+  padding-top: 0rem;
 
   border: solid;
   border-width:.5px;
   border-radius: 5px;
-  border-color: DarkGrey;
+  border-color: Silver;
 }
 
 
