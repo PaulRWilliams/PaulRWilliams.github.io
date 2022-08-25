@@ -1,17 +1,11 @@
 TODO
 
-8/22/2022
+8/23/2022
 ---
-* fix map reset/bounds
-* play with icon colors
+* Add clustering by location
+* fix map reset/bounds based on markers being shown
+* play with icon colors for client type
 * icon clustering still hiding stuff (Las Vegas)
-* Add about text and all that stuff
-
-
-old
------
-* how to deal with list in a more useful way
-* download data - all of the data or filtered?
 * clean up code
   - make sure all of the code is actually used
   - put utility code into folders
@@ -21,7 +15,6 @@ old
 daisy todo
 ---
 * new data
-* icons & colors for client type
 
 
 Done
@@ -35,3 +28,8 @@ Done
 * make responsive (mobile?)
 * what is up with the colors??
  - make sure its updated from spreadsheet?
+
+ old
+ -----
+ * how to deal with list in a more useful way
+ * download data - all of the data or filtered?

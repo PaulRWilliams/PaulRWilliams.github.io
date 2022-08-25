@@ -4,20 +4,6 @@
 // 10/02/2021
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// List of all the attribute types
-let attributeTypes={"Building Type": [...new Set(data.map(d=>d["Building Type"]))],
-                    "Client Type": [...new Set(data.map(d=>d["Client Type"]))] };
-
-// Get the unique dates in the data
-const distinctDates = [...new Set(data.map(d=>d.Date))].sort();
-const dates = data.map( d=>d.Date);
-const datesCount = _.countBy(dates);
-
-// The current dates we're looking at
-currentDates = [string2Date(distinctDates[0]-1), string2Date(distinctDates[distinctDates.length-1]+2)];
-
-// The current types of markers we're looking at
-currentTypes = Object.keys(mapMarkerDefinitions[currentAttribute]);
 
 // Get the dates count by attribute type
 var datesByAttribute = {};

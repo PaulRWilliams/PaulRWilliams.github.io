@@ -7,6 +7,8 @@
 // - -- -- - - --- - -- - - --- - ---- -- --- -- - -- -  //
 // Button actions
 // - -- -- - - --- - -- - - --- - ---- -- --- -- - -- -  //
+
+// Open new window on button click
 document.getElementById("openButton").addEventListener("click", function(){
 
   // Open the new window
@@ -70,10 +72,12 @@ document.getElementById("openButton").addEventListener("click", function(){
    openWindowButtonClicks = openWindowButtonClicks+1;
 });
 
+// Export data on button click
 document.getElementById("saveDataButton").addEventListener("click", function(){
   exportToCSV(data);
 });
 
+// ??
 document.getElementById("clusterButton").addEventListener("click", function(){
 
   // Open the new window
@@ -95,14 +99,27 @@ document.getElementById("clusterButton").addEventListener("click", function(){
    clusterButtonClicks = clusterButtonClicks+1;
 });
 
+// Listener for the type radio buttons
+document.querySelectorAll("input[name='typeRadio']").forEach((input) => {
+      input.addEventListener('change', function(event) {
+           let byTypeAttribute = event.target.id;
+           currentAttribute = attributes[byTypeAttribute];
+           currentTypes = Object.keys(iconMap[currentAttribute]);
+
+           // Update the map marker layers
+            updateMapMarkers();
+
+           // Update the timeline
+           updateTimelineData()
+        });
+  });
+
+
 // - -- -- - - --- - -- - - --- - ---- -- --- -- - -- -  //
 // Map
 // - -- -- - - --- - -- - - --- - ---- -- --- -- - -- -  //
 
 // When the map moves, update the list
-//map.on('move', function() {updateList();})
-//   .on('zoom', function() {updateList();});
-
 function updateMapMarkers(){
 
   if(currentMarkers.length > 0){
@@ -156,7 +173,7 @@ function updateMapMarkers(){
   if(initState){
     defaultBounds = bounds;
     console.log("bounds", bounds);
-    map.fitBounds(defaultBounds);
+    //map.fitBounds(defaultBounds);
     initState = false;
   }
 
@@ -167,67 +184,6 @@ function updateMapMarkers(){
 // - -- -- - - --- - -- - - --- - ---- -- --- -- - -- -  //
 // List
 // - -- -- - - --- - -- - - --- - ---- -- --- -- - -- -  //
-
-/*function openTab(evt, tabName) {
-  var i, x, tablinks;
-  x = document.getElementsByClassName("content-tab");
-  for (i = 0; i < x.length; i++) {
-      x[i].style.display = "none";
-  }
-  tablinks = document.getElementsByClassName("tab");
-  for (i = 0; i < x.length; i++) {
-      tablinks[i].className = tablinks[i].className.replace(" is-active", "");
-  }
-  document.getElementById(tabName).style.display = "block";
-  evt.currentTarget.className += " is-active";
-}*/
-
-// Add event listeners to the tabs to change content
-/*let tabsWithContent = (function () {
-
-  // Get the tabs and tabs content
-  let tabs = document.querySelectorAll('.tabs li');
-  let tabsContent = document.querySelectorAll('.tab-content');
-
-  // Set all tabs to deactive
-  let deactvateAllTabs = function () {
-    tabs.forEach(function (tab) {
-      tab.classList.remove('is-active');
-    });
-  };
-
-  // Hide all tabs content
-  let hideTabsContent = function () {
-    tabsContent.forEach(function (tabContent) {
-      tabContent.classList.remove('is-active');
-    });
-  };
-
-  // Activate this specific tab's content
-  let activateTabsContent = function (tab) {
-    tabsContent[getIndex(tab)].classList.add('is-active');
-  };
-
-  // Get the index of this tab
-  let getIndex = function (el) {
-    return [...el.parentElement.children].indexOf(el);
-  };
-
-  // Iterate over all tabs, add a listener for the above actions
-  tabs.forEach(function (tab) {
-    tab.addEventListener('click', function () {
-      deactvateAllTabs();
-      hideTabsContent();
-      tab.classList.add('is-active');
-      activateTabsContent(tab);
-    });
-  })
-
-  // Set the first tab as active
-  tabs[0].click();
-})();
-
-*/
 
 function updateList (){
 
@@ -542,7 +498,6 @@ function updateTimelineData(){
 
 // Change the size of the timeline based on the window size
 function timelineSizeChange(){
-  console.log("wide", container.style("width"))
 
      var wide = parseInt(container.style("width")),
          high = parseInt(container.style("height"));
@@ -615,42 +570,3 @@ function timelineSizeChange(){
 
    updateTimelineData();
  }
-
-// Listener for the type radio buttons
-function changeAttribute(event) {
-     let byTypeAttribute = event.target.id;
-     currentAttribute = attributes[byTypeAttribute];
-     currentTypes = Object.keys(iconMap[currentAttribute]);
-
-     // Update the map marker layers
-      updateMapMarkers();
-
-     // Update the timeline
-     updateTimelineData()
-  }
-document.querySelectorAll("input[name='typeRadio']").forEach((input) => {
-      input.addEventListener('change', changeAttribute);
-  });
-
-// Function to reset the map to the default view
-//function setDefaultMapView(){
-//  map.fitBounds(defaultBounds);
-//}
-//document.getElementById('mapReset').onclick = setDefaultMapView;
-
-// Function to set the map view to the filtered data
-//function setMapView2Markers(){
-//  map.fitBounds(markerBounds, { padding: [5, 5] });//
-//}
-//document.getElementById('mapZoom2Markers').onclick = setMapView2Markers;
-
-// Function to save all the data
-//document.getElementById('allDownload').onclick = saveAllData;
-
-// Function to save filtered data
-// function saveFilteredData(){
-//   console.log("save filtered data", currentData);
-//   downloadCSVFromJson("prw_filtered_dataset.csv", currentData);
-//
-// }
-//document.getElementById('filteredDownload').onclick = saveFilteredData;
