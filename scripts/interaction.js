@@ -499,74 +499,79 @@ function updateTimelineData(){
 // Change the size of the timeline based on the window size
 function timelineSizeChange(){
 
-     var wide = parseInt(container.style("width")),
-         high = parseInt(container.style("height"));
-     var scale = wide/outerWidth;
+   var wide = parseInt(container.style("width")),
+       high = parseInt(container.style("height"));
+   var scale = wide/outerWidth;
 
-     // Math out the dimensions of the plot
-     outerWidth = parseInt(container.style("width"));
-     outerHeight = parseInt(container.style("height"));
-     width = outerWidth - margin.left - margin.right;
-     height = outerHeight - margin.top - margin.bottom;
-     innerWidth = width - padding.left - padding.right;
-     innerHeight = height - padding.top - padding.bottom;
-     endX = startX + width;
-     endY = startY + height;
-     endInX = startInX + innerWidth;
-     endInY = startInY + innerHeight;
-     aspect = outerWidth/outerHeight;
+   // Math out the dimensions of the plot
+   outerWidth = parseInt(container.style("width"));
+   outerHeight = parseInt(container.style("height"));
+   width = outerWidth - margin.left - margin.right;
+   height = outerHeight - margin.top - margin.bottom;
+   innerWidth = width - padding.left - padding.right;
+   innerHeight = height - padding.top - padding.bottom;
+   endX = startX + width;
+   endY = startY + height;
+   endInX = startInX + innerWidth;
+   endInY = startInY + innerHeight;
+   aspect = outerWidth/outerHeight;
 
-     // The range for the XY scales
-     xScale.range([startInX, endInX]);
-     yScale.range([endInY, startInY]);
+   // The range for the XY scales
+   xScale.range([startInX, endInX]);
+   yScale.range([endInY, startInY]);
 
-     // Update the all line position
-     allPos = yScale(0) + 45;
+   // Update the all line position
+   allPos = yScale(0) + 45;
 
-     // Update the x axis
-     xAxis.scale(xScale);
+   // Update the x axis
+   xAxis.scale(xScale);
 
-     // Update the start and end of the timeline
-     startOfTimeline = date2Pos(xScale.domain()[0]);
-     endOfTimeline = date2Pos(xScale.domain()[1]);
+   // Update the start and end of the timeline
+   startOfTimeline = date2Pos(xScale.domain()[0]);
+   endOfTimeline = date2Pos(xScale.domain()[1]);
 
-     // Set the position of the start and end timeline
-     setStartGuide();
-     setEndGuide();
+   // Set the position of the start and end timeline
+   setStartGuide();
+   setEndGuide();
 
-     // Update the DOM elements that change with a size change
-     d3.select(".mainGroup").attr("transform", "scale(" + scale + ")");
-     d3.select("#svg-chart").style("height", wide*(1.0/aspect));
+   // Update the DOM elements that change with a size change
+   d3.select(".mainGroup").attr("transform", "scale(" + scale + ")");
+   d3.select("#svg-chart").style("height", wide*(1.0/aspect));
 
-     // Position the x axis
-     axisGroup.attr("transform", "translate(0," + endInY +")");
+   // Position the x axis
+   axisGroup.attr("transform", "translate(0," + endInY +")");
 
-     // Attach the xAxis
-     axisGroup.call(xAxis);
+   // Attach the xAxis
+   axisGroup.call(xAxis);
 
-     // Update the width and height of the background rect
-     backgroundRect.attr("x", startOfTimeline)
-                   .attr("width", endOfTimeline-startOfTimeline)
-                   .attr("height", endInY-startInY);
+   // Update the width and height of the background rect
+   backgroundRect.attr("x", startOfTimeline)
+                 .attr("width", endOfTimeline-startOfTimeline)
+                 .attr("height", endInY-startInY);
 
-     // Update the start guideline
-     startLine.attr("y2", endInY);
-     startLowKnob.attr("cy", endInY);
-     startRect.attr("x", date2Pos(xScale.domain()[0]))
-              .attr("height", endInY-startInY);
-
-     // Update the end guideline
-     endLine.attr("y2", endInY);
-     endLowKnob.attr("cy", endInY);
-     endRect.attr("x", date2Pos(xScale.domain()[1]))
+   // Update the start guideline
+   startLine.attr("y2", endInY);
+   startLowKnob.attr("cy", endInY);
+   startRect.attr("x", date2Pos(xScale.domain()[0]))
             .attr("height", endInY-startInY);
 
-     // Update the timeline slider
-     timelineRect.attr("x", startOfTimeline)
-                 .attr("y", endInY)
-                 .attr("width", endOfTimeline-startOfTimeline);
-     startCircle.attr("cy", endInY);
-     endCircle.attr("cy", endInY);
+   // Update the end guideline
+   endLine.attr("y2", endInY);
+   endLowKnob.attr("cy", endInY);
+   endRect.attr("x", date2Pos(xScale.domain()[1]))
+          .attr("height", endInY-startInY);
+
+   // Update the timeline slider
+   timelineRect.attr("x", startOfTimeline)
+               .attr("y", endInY)
+               .attr("width", endOfTimeline-startOfTimeline);
+   startCircle.attr("cy", endInY);
+   endCircle.attr("cy", endInY);
 
    updateTimelineData();
  }
+ d3.select(window).on("resize", timelineSizeChange);
+
+// DRIVE
+updateMapMarkers();
+//timelineSizeChange();

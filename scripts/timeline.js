@@ -34,61 +34,61 @@ function date2Pos(date) {
 var startOfTimeline = date2Pos(xScale.domain()[0]);
 var endOfTimeline = date2Pos(xScale.domain()[1]);
 
- function dragStartPoint(event, d){
-   // Get the mouse position
-   var mx = event.x;
+function dragStartPoint(event, d){
+ // Get the mouse position
+ var mx = event.x;
 
-   // Clamp the line position
-   if ( mx < startInX )
-     mx = startInX;
-   if ( mx > endInX )
-     mx = endInX;
+ // Clamp the line position
+ if ( mx < startInX )
+   mx = startInX;
+ if ( mx > endInX )
+   mx = endInX;
 
-   // Find the new start date
-   startDate = pos2Date(mx);
+ // Find the new start date
+ startDate = pos2Date(mx);
 
-    // Set the current start date that we are interested in
-   currentDates[0] = startDate;
+  // Set the current start date that we are interested in
+ currentDates[0] = startDate;
 
-   // Set the startGuide position and color
-   setStartGuide();
+ // Set the startGuide position and color
+ setStartGuide();
 
-   // Check if the start point is part the end point
-   let endPt = date2Pos(currentDates[1]);
+ // Check if the start point is part the end point
+ let endPt = date2Pos(currentDates[1]);
 
-   if(mx > endPt){
-     currentDates[1] = mx;
-     setEndGuide();
-   }
- }
- function dragEndPoint(event, d){
-
-   // Get the x mouse position
-   var mx = event.x;
-
-   // Clamp the line position
-   if ( mx < startInX )
-     mx = startInX;
-   if ( mx > endInX )
-     mx = endInX;
-
-   // Find the new end date
-   endDate = pos2Date(mx);
-
-   // Set the current end date that we are interested in
-   currentDates[1] = endDate;
-
-   // Set the endGuide position
+ if(mx > endPt){
+   currentDates[1] = mx;
    setEndGuide();
-
-   // Check if the end point is before the start point
-   let stPt = date2Pos(currentDates[0]);
-
-   if(mx < stPt){
-     currentDates[0] = mx;
-     setStartGuide();
-   }
  }
+}
+function dragEndPoint(event, d){
+
+ // Get the x mouse position
+ var mx = event.x;
+
+ // Clamp the line position
+ if ( mx < startInX )
+   mx = startInX;
+ if ( mx > endInX )
+   mx = endInX;
+
+ // Find the new end date
+ endDate = pos2Date(mx);
+
+ // Set the current end date that we are interested in
+ currentDates[1] = endDate;
+
+ // Set the endGuide position
+ setEndGuide();
+
+ // Check if the end point is before the start point
+ let stPt = date2Pos(currentDates[0]);
+
+ if(mx < stPt){
+   currentDates[0] = mx;
+   setStartGuide();
+ }
+}
 
  // The timeline SVG
  var svg =  d3.select("#timeline")

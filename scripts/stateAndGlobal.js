@@ -11,7 +11,7 @@ var initState = true;
 // --- Windowing variables
 // Constant dimension variables for timeline
 const margin = {top: 12, right: 25, bottom: 5, left: 10},
-      padding = {top: 10, right: 10, bottom: 10, left: 10};
+      padding = {top: 10, right: 125, bottom: 10, left: 10};
 const startX = margin.left,
       startY = margin.top,
       startInX = startX + padding.left,
