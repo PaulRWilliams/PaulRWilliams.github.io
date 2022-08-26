@@ -2,15 +2,21 @@ TODO
 
 8/23/2022
 ---
+
+* play with icon colors for client type
+
+
 * Add clustering by location
 * fix map reset/bounds based on markers being shown
-* play with icon colors for client type
 * icon clustering still hiding stuff (Las Vegas)
+
 * clean up code
   - make sure all of the code is actually used
-  - put utility code into folders
   - remove unused files
   - fully document
+
+  * Update the how to (?)
+
 
 daisy todo
 ---
@@ -25,9 +31,7 @@ Done
 * add Daisy (and UO dev) as contributor to github [done]
 * don't update list with map moving
 * document automatic addressing -> data.js (put files into new folder)
-* make responsive (mobile?)
-* what is up with the colors??
- - make sure its updated from spreadsheet?
+
 
  old
  -----

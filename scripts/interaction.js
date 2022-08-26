@@ -72,12 +72,18 @@ document.getElementById("openButton").addEventListener("click", function(){
    openWindowButtonClicks = openWindowButtonClicks+1;
 });
 
+// Open the howto modal
+//document.getElementById("instructButton").addEventListener("click", function(){
+
+//});
+
 // Export data on button click
 document.getElementById("saveDataButton").addEventListener("click", function(){
   exportToCSV(data);
 });
 
 // ??
+/*
 document.getElementById("clusterButton").addEventListener("click", function(){
 
   // Open the new window
@@ -98,6 +104,7 @@ document.getElementById("clusterButton").addEventListener("click", function(){
    // Update the number of clicks
    clusterButtonClicks = clusterButtonClicks+1;
 });
+*/
 
 // Listener for the type radio buttons
 document.querySelectorAll("input[name='typeRadio']").forEach((input) => {
