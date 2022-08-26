@@ -1,59 +1,59 @@
 const iconMap={
     "Building Type": {
         "Banks/Financial": {
-            "color": "#ff0000",
+            "color": "#006d2c",
             "icon": "fa-money-check-alt"
         },
         "Commercial": {
-            "color": "#CE865D ",
+            "color": "#addd8e",
             "icon": "fa-industry"
         },
         "Educational": {
-            "color": "#fee5d9",
+            "color": "#41b6c4",
             "icon": "fa-graduation-cap"
         },
         "Food Service/Restaurant": {
-            "color": "#8EA893 ",
+            "color": "#2ca25f",
             "icon": "fa-utensils"
         },
         "Government": {
-            "color": "#de2d26",
+            "color": "#08306b",
             "icon": "fa-landmark"
         },
         "Hotels/Hospitality": {
-            "color": "#9ecae1",
+            "color": "#810f7c",
             "icon": "fa-bed"
         },
         "Medical": {
-            "color": "#fcae91",
+            "color": "#c6dbef",
             "icon": "fa-first-aid"
         },
         "Memorial": {
-            "color": "#fb6a4a",
+            "color": "#6baed6",
             "icon": "fa-monument"
         },
         "Office Building": {
-            "color": "#D2C6AE ",
+            "color": "#78c679",
             "icon": "fa-building"
         },
         "Recreational": {
-            "color": "#C55028 ",
+            "color": "#fd8d3c",
             "icon": "fa-table-tennis"
         },
         "Religious": {
-            "color": "#a50f15",
+            "color": "#2171b5",
             "icon": "fa-place-of-worship"
         },
         "Residential/Multi-Unit": {
-            "color": "#08306b",
+            "color": "#88419d",
             "icon": "fa-city"
         },
         "Residential/Single Family": {
-            "color": "#4292c6",
+            "color": "#8c6bb1",
             "icon": "fa-home"
         },
         "Retail/Shopping": {
-            "color": "#43602F ",
+            "color": "#00441b",
             "icon": "fa-shopping-cart"
         },
         "Theater/Entertainment": {
@@ -63,31 +63,31 @@ const iconMap={
     },
     "Client Type": {
         "Private/Corporate": {
-            "color": "#7fc97f",
+            "color": "#8dd3c7",
             "icon": "fa-user-tie"
         },
         "Private/Individual": {
-            "color": "#beaed4",
+            "color": "#bebada",
             "icon": "fa-user"
         },
         "Private/Religious": {
-            "color": "#fdc086",
+            "color": "#fb8072",
             "icon": "fa-pray"
         },
         "Public": {
-            "color": "#ffff99",
+            "color": "#80b1d3",
             "icon": "fa-users"
         },
         "Public-gov": {
-            "color": "#386cb0",
+            "color": "#fdb462",
             "icon": "fa-flag-usa"
         },
         "Public/Military": {
-            "color": "#f0027f",
+            "color": "#b3de69",
             "icon": "fa-fighter-jet"
         },
         "Unknown": {
-            "color": "#bf5b17",
+            "color": "#fccde5",
             "icon": "fa-question"
         }
     }
