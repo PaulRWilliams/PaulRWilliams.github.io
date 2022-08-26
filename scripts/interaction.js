@@ -107,10 +107,10 @@ document.querySelectorAll("input[name='typeRadio']").forEach((input) => {
            currentTypes = Object.keys(iconMap[currentAttribute]);
 
            // Update the map marker layers
-            updateMapMarkers();
+           updateMapMarkers();
 
            // Update the timeline
-           updateTimelineData()
+           updateTimeline()
         });
   });
 
@@ -250,5 +250,5 @@ function updateList (){
 
 // DRIVE
 updateMapMarkers();
-d3.select(window).on("resize", timelineSizeChange);
-timelineSizeChange();
+d3.select(window).on("resize", updateTimeline);
+updateTimeline();

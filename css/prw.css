@@ -139,9 +139,11 @@ is-secondary {
   border-radius: 5px;
   border-color: Silver;
 }
-#timeline{
-    height:350px;
+
+#timeline-svg{
+  /*height:350px;*/
 }
+
 .kp-timeline{
   background-color: white;
   width:100%;
@@ -155,22 +157,24 @@ is-secondary {
   border-color: Silver;
 }
 
-
-#svg-map{
-    background-color: pink;
-    border: none;
-    overflow:visible !important;
+.timelineRect{
+    fill: AliceBlue;
+    pointer-events: none;
+    /*opacity: .25;*/
 }
-#svg-legend{
+
+.allTimelineRect{
+  fill: #7d7d7d;
+}
+
+
+/*  */
+/* #svg-legend{
   background-color: green;
     border: solid;
-}
+} */
 
 /* The svg */
-#svg-chart {
-    background-color: white;
-    border: none;
-}
 
 /* Testing rects */
 .rect-out{
@@ -182,9 +186,9 @@ is-secondary {
 }
 .rect{
     fill: HoneyDew;
-    opacity: 0.25;
-    stroke: Gray;
-    stroke-width:.75px;
+    /*opacity: 0.25;*/
+    stroke: red;
+    stroke-width:2.75px;
 }
 
 .rect-in{
@@ -213,11 +217,6 @@ is-secondary {
     cursor: default;
 }
 
-.timelineRect{
-    fill: AliceBlue;
-    pointer-events: none;
-    opacity: .25;
-}
 
 .timelineSliderRect{
     fill: AliceBlue;
@@ -237,13 +236,13 @@ is-secondary {
 }
 
 /* Axes styles */
-.xaxis path,
-.xaxis line {
+.axisGroup path,
+.axisGroup line {
     fill: none;
     stroke: #000;
     shape-rendering: crispEdges;
 }
-.xaxis text{
+.axisGroup text{
     font-family: Verdana;
     font: 10pt sans-serif;
 }
@@ -276,11 +275,7 @@ div.tooltip {
     pointer-events: none;
 }
 
-.mainGroup{
-    border-style: solid;
-    border-width: 5px;
-    background: lightsteelblue;
-}
+
 
 .textList{
     font-family: Verdana;

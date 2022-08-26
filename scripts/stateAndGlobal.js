@@ -25,6 +25,9 @@ let attributes = {"building":"Building Type", "client":"Client Type"};
 let attributeTypes={"Building Type": [...new Set(data.map(d=>d["Building Type"]))],
                     "Client Type": [...new Set(data.map(d=>d["Client Type"]))] };
 
+attributeTypes["Building Type"].sort().reverse();
+attributeTypes["Client Type"].sort().reverse();
+
 // The current attribute type we're looking at
 let currentAttribute = "Building Type";
 
