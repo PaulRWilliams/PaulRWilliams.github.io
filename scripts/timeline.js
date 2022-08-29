@@ -70,7 +70,6 @@ var svg =  d3.select("#timeline")
 
 // The top-level group for the timeline
 var outerGroup = svg.append("g").attr("class", "outerGroup");
-var testRect = outerGroup.append("rect").attr("class", "rect");
 
 // Create the timeline chart
 var timelineChartGroup = outerGroup.append("g").attr("class", "timelineChartGroup");
@@ -89,9 +88,8 @@ var startGuide = outerGroup.append("g")
                           .attr("id", "startGuide")
                           .attr("transform", "translate(0, 0)");
 var startRect = startGuide.append("rect")
-                        .attr("class", "rect-out")
-                        .attr("x", date2Pos(xScale.domain()[0]))
-                        .attr("width", 0);
+                          .attr("class", "rect-out")
+                          .attr("width", 0);
 var startLine = startGuide.append("line")
                           .attr("x1", 0)
                           .attr("x2", 0);
@@ -142,6 +140,8 @@ var allText = allTimelineGroup.append("text")
 var slider = outerGroup.append("g").attr("class", "slider").attr("transform", "translate(0, 30)");
 
 var sliderRect = slider.append("rect").attr("class", "timelineSliderRect")
+var sliderRectStart = slider.append("rect").attr("class", "timelineSliderRectOut start")
+var sliderRectEnd = slider.append("rect").attr("class", "timelineSliderRectOut end")
 
 var gradStart = svg.append("defs")
                    .append("linearGradient")
@@ -253,14 +253,18 @@ function updateTimeline(){
   // Position the x axis
   axisGroup.attr("transform", "translate(0," + endOfTimelineY +")");
 
-  // Attach the xAxis
-  axisGroup.call(xAxis);
-
   // Update the slider
   sliderRect.attr("x", startOfTimelineX)
-            .attr("y", allTimelineY )
+            .attr("y", allTimelineY)
             .attr("width", endOfTimelineX)
             .attr("height", 30);
+  sliderRectStart.attr("x", startOfTimelineX)
+                 .attr("y", allTimelineY)
+                 .attr("height", 30);
+  sliderRectEnd.attr("x", 100)
+               .attr("y", allTimelineY)
+               .attr("width", 20)
+               .attr("height", 30);
   startCircle.attr("cy",  allTimelineY);
   endCircle.attr("cy",  allTimelineY);
 
@@ -323,16 +327,18 @@ function updateTimeline(){
       });
 
   // Update the guides
-  startRect.attr("y", startOfTimelineY);
+  startRect.attr("x", startOfTimelineX)
+           .attr("y", startOfTimelineY)
+           .attr("height", endOfTimelineY-startOfTimelineY);
   startLine.attr("y1", startOfTimelineY);
   startLine.attr("y2", endOfTimelineY);
   startTopKnob.attr("cy", startOfTimelineY);
-
   startLowKnob.attr("cy", endOfTimelineY);
   startText.attr("y", startOfTimelineY - 7.5);
 
-  endRect.attr("x", date2Pos(xScale.domain()[1]))
-         .attr("y", startOfTimelineY);
+  endRect.attr("x", endOfTimelineX)
+         .attr("y", startOfTimelineY)
+         .attr("height", endOfTimelineY-startOfTimelineY);
   endLine.attr("y1", startOfTimelineY);
   endLine.attr("y2", endOfTimelineY);
   endTopKnob.attr("cy", startOfTimelineY);
@@ -348,7 +354,7 @@ function updateTimeline(){
   let rInc = yInc*.85;
   let startY = yScale.range()[0]-yInc;
   let duration = 750;
-  
+
   singleLine.selectAll("rect")
             .data(Object.entries(datesByAttribute[currentAttribute]))
             .join(
@@ -525,8 +531,10 @@ function updateTimeline(){
                      .style("opacity", 0);
          });
 
-}
+         // Attach the xAxis
+         axisGroup.call(xAxis);
 
+}
 
 // Set the position and text of start guide
 var setStartGuide = function(){
@@ -547,7 +555,9 @@ var setStartGuide = function(){
              .attr("width", timeWidth);
 
  sliderRect.attr("x", startDatePosition)
-             .attr("width", timeWidth);
+           .attr("width", timeWidth);
+ sliderRectStart//.attr("x", date2Pos(xScale.domain[0]))
+                .attr("width", startDatePosition-startOfTimelineX);
 
   // Set the location of the time slider end point
   startCircle.attr("cx", startDatePosition);
@@ -575,6 +585,9 @@ var setEndGuide = function(){
 
   timelineRect.attr("width", timeWidth);
   sliderRect.attr("width", timeWidth);
+  sliderRectEnd.attr("x", endDatePosition)
+               .attr("width", date2Pos(xScale.domain()[1])-endDatePosition);
+
 
   // Set the location of the time slider end point
   endCircle.attr("cx", endDatePosition);
@@ -595,7 +608,13 @@ function dragStartPoint(event, d){
     mx = timelineWidth;
 
   // Find the new start date
-  startDate = pos2Date(mx);
+  let startDate = pos2Date(mx);
+
+  // Check that we aren't past the end date
+  let endDate = currentDates[1];
+  if(startDate > endDate){
+    startDate = endDate;
+  }
 
    // Set the current start date that we are interested in
   currentDates[0] = startDate;
@@ -603,13 +622,6 @@ function dragStartPoint(event, d){
   // Set the startGuide position and color
   setStartGuide();
 
-  // Check if the start point is part the end point
-  let endPt = date2Pos(currentDates[1]);
-
-  if(mx > endPt){
-    currentDates[1] = mx;
-    setEndGuide();
-  }
 }
 function dragEndPoint(event, d){
 
@@ -623,19 +635,17 @@ function dragEndPoint(event, d){
     mx = timelineWidth;
 
   // Find the new end date
-  endDate = pos2Date(mx);
+  let endDate = pos2Date(mx);
+
+  // Check that we aren't past the start date
+  let startDate = currentDates[0];
+  if(endDate < startDate){
+    endDate = startDate;
+  }
 
   // Set the current end date that we are interested in
   currentDates[1] = endDate;
 
   // Set the endGuide position
   setEndGuide();
-
-  // Check if the end point is before the start point
-  let stPt = date2Pos(currentDates[0]);
-
-  if(mx < stPt){
-    currentDates[0] = mx;
-    setStartGuide();
-  }
 }

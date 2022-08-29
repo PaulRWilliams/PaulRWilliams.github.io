@@ -29,5 +29,6 @@ Note: This runs on a specified or the first sheet.
 * Using:
 https://github.com/coryasilva/Leaflet.ExtraMarkers
 https://github.com/Leaflet/Leaflet.markercluster
+https://github.com/jawj/OverlappingMarkerSpiderfier-Leaflet/
 
 # Development Notes

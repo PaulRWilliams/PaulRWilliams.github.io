@@ -16,7 +16,6 @@ var openWindowButtonClicks = 0;
 // The new window we create for the table
 var newWindow = undefined;
 
-
 // --- Attribute is building vs client, types are within the attribute
 // Create labels for each attribute
 let attributes = {"building":"Building Type", "client":"Client Type"};
@@ -72,9 +71,7 @@ for(types in attributes){
 
 
 // The current data for the list
-let currentData = undefined;
-
-
+let currentData = [];
 
 // The current makerLayers
 let currentMarkers = [];

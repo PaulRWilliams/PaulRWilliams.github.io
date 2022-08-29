@@ -2,10 +2,6 @@ TODO
 
 8/23/2022
 ---
-
-* play with icon colors for client type
-
-
 * Add clustering by location
 * fix map reset/bounds based on markers being shown
 * icon clustering still hiding stuff (Las Vegas)
@@ -31,6 +27,7 @@ Done
 * add Daisy (and UO dev) as contributor to github [done]
 * don't update list with map moving
 * document automatic addressing -> data.js (put files into new folder)
+* play with icon colors for client type
 
 
  old

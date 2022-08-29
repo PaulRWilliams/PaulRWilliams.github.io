@@ -15,12 +15,13 @@ document.getElementById("openButton").addEventListener("click", function(){
   if(openWindowButtonClicks %2 === 0){
 
     // Change the button text
-    document.getElementById("openButton").innerHTML =   '<span class="icon is-small"><i class="fas fa-window-maximize" aria-hidden="true"></i></span> <span>Put Table Back into Page</span>';
+    document.getElementById("openButton").innerHTML = '<span class="icon is-small"><i class="fas fa-window-maximize" aria-hidden="true"></i></span> <span>Put Table Back into Page</span>';
 
     // Open a new window
     var newWindowContent = document.getElementById('info-table').innerHTML;
     newWindow = window.open("", "", "width=500,height=400");
     newWindow.document.write('<head><meta charset="UTF-8"><title>Architectural Works by Paul R. Williams</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css"/><link rel="stylesheet" href="./css/prw.css" /></head>')
+
     newWindow.document.write(newWindowContent);
 
     // Put the table back if we close this new window
@@ -72,54 +73,25 @@ document.getElementById("openButton").addEventListener("click", function(){
    openWindowButtonClicks = openWindowButtonClicks+1;
 });
 
-// Open the howto modal
-//document.getElementById("instructButton").addEventListener("click", function(){
-
-//});
-
 // Export data on button click
 document.getElementById("saveDataButton").addEventListener("click", function(){
   exportToCSV(data);
 });
 
-// ??
-/*
-document.getElementById("clusterButton").addEventListener("click", function(){
-
-  // Open the new window
-  if(clusterButtonClicks %2 === 0){
-
-    // Change the button text
-    document.getElementById("clusterButton").innerHTML = '<span class="icon is-small"><i class="fas fa-text-height" aria-hidden="true"></i></span><span>Cluster Markers by Type</span>';
-
-  }
-  // Close the new window
-  else{
-
-      // Change the button text
-    document.getElementById("clusterButton").innerHTML = '<span class="icon is-small"><i class="fas fa-location-arrow" aria-hidden="true"></i></span> <span>Cluster Markers by Location</span>';
-
-  }
-
-   // Update the number of clicks
-   clusterButtonClicks = clusterButtonClicks+1;
-});
-*/
-
 // Listener for the type radio buttons
 document.querySelectorAll("input[name='typeRadio']").forEach((input) => {
-      input.addEventListener('change', function(event) {
-           let byTypeAttribute = event.target.id;
-           currentAttribute = attributes[byTypeAttribute];
-           currentTypes = Object.keys(iconMap[currentAttribute]);
+  input.addEventListener('change', function(event) {
+     let byTypeAttribute = event.target.id;
+     currentAttribute = attributes[byTypeAttribute];
+     currentTypes = Object.keys(iconMap[currentAttribute]);
 
-           // Update the map marker layers
-           updateMapMarkers();
+     // Update the map marker layers
+     updateMapMarkers();
 
-           // Update the timeline
-           updateTimeline()
-        });
+     // Update the timeline
+     updateTimeline()
   });
+});
 
 // - -- -- - - --- - -- - - --- - ---- -- --- -- - -- -  //
 // Map
@@ -127,60 +99,8 @@ document.querySelectorAll("input[name='typeRadio']").forEach((input) => {
 
 // When the map moves, update the list
 function updateMapMarkers(){
-
-  if(currentMarkers.length > 0){
-    map.eachLayer((layer) => {
-      if(layer._url === undefined)
-        layer.remove();
-    });
-    currentMarkers = [];
-  }
-
-  // Get the markers layers to add, filtered by date
-  var filteredByDates = _.pickBy(markerClusterArrays[currentAttribute], function(value, key) {
-     return date2Int(currentDates[0]) <= key && key <= date2Int(currentDates[1]);
-  });
-
-  // Get the marker layers to add, filtered by type
-  var filteredByType = {};
-  for(let f in filteredByDates) {
-     let types = _.pickBy(filteredByDates[f], function(value, key){
-      return currentTypes.indexOf(key) > -1;
-     });
-     if(Object.keys(types).length > 0)
-       filteredByType[f] = types;
-  }
-
-  // Create and add the subgroups
-  for(let date in filteredByType){
-    for (let type in filteredByType[date]){
-      let mySubGroup = L.featureGroup.subGroup(markerGroups[currentAttribute][type], filteredByType[date][type]);
-      currentMarkers.push(filteredByType[date][type]);
-      mySubGroup.addTo(map);
-   }
-  }
-
-  // Add the marker groups
-  let bounds = undefined;
-  for(let t in currentTypes){
-    let type = currentTypes[t];
-
-    markerGroups[currentAttribute][type].addTo(map);
-    if(bounds === undefined)
-      bounds = markerGroups[currentAttribute][type].getBounds();
-    else
-      bounds.extend(markerGroups[currentAttribute][type].getBounds());
-  }
-
-  // Set the bounds around the currently displayed markers
-  markerBounds = bounds;
-
-  // If this is the first time we run, save the bounds
-  if(initState){
-    defaultBounds = bounds;
-    //map.fitBounds(defaultBounds);
-    initState = false;
-  }
+  // Update the map
+  updateMap();
 
   // Update the list of data
   updateList();
@@ -189,6 +109,55 @@ function updateMapMarkers(){
 // - -- -- - - --- - -- - - --- - ---- -- --- -- - -- -  //
 // List
 // - -- -- - - --- - -- - - --- - ---- -- --- -- - -- -  //
+
+// Scroll the line that corresponds to the clicked marker
+function scroll2Row(marker){
+
+  console.log("Scroll2", marker);
+
+  var elm = document.getElementById(marker.data.Name);
+  elm.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center'
+  });
+
+  elm.style.border='2px double Red';
+
+  /*let line = $('#info-table tr').filter(function(){
+    console.log($.trim($('td', this).eq(0).text())==marker.data.Name);
+   return $.trim($('td', this).eq(0).text())==marker.data.Name;
+  });
+    console.log("line",line);
+    console.log("not line", $("tr").index(marker.data.Name));
+*/
+
+/*
+
+
+  // Grab the table where it lives (here or in the new window)
+  var currentWindow = document;
+  if(newWindow !== undefined){
+    currentWindow =  newWindow.document;
+  }
+
+  // Get all the rows
+  var rows = currentWindow.querySelectorAll('#kp-table tr');
+
+  // Unhighlight the rows
+  for (var i=0;i <rows.length;i++){
+    rows[i].style.backgroundColor="White";
+  }
+
+  // line is zero-based
+  // line is the row number that you want to see into view after scroll
+  rows[line+1].scrollIntoView({
+      behavior: 'smooth',
+      block: 'center'
+  });
+  rows[line+1].style.backgroundColor='#EEE8AA';
+*/
+}
+
 function updateList (){
 
   currentMapZoom = map.getZoom();
@@ -210,9 +179,12 @@ function updateList (){
     }
   }
 
+  console.log("currentData", currentData);
+
   // Add the rows and columns to the info table
   let info_rows = infoTablebody.selectAll("tr")
                       .data(currentData)
+                      .attr("id", (d)=>(d.Name))
                       .join(
                         enter => enter.append("tr"),
                         update => update,

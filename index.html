@@ -37,7 +37,7 @@
         <p class=""><a href="#contrib">Contributors</a></p>
       </div>
       <div class="navbar-item">
-        <p class=""><a href="#map">Map</a></p>
+        <p class=""><a href="#mapper">Map</a></p>
       </div>
       <div class="navbar-item">
         <p class=""><a href="#faq">Frequently Asked Questions</a></p>
@@ -162,32 +162,29 @@
 
     <!-- Visualization -->
     <section class="section kp-mapSection kp-noBottomMargin has-text-centered">
-      <a class="kp-anchor" id="mapper"></a><p class="title kp-noBottomMargin is-5">Paul R. Williams Mapper</p>
+      <a class="kp-anchor" id="mapper"></a><p class="title is-5">Paul R. Williams Mapper</p>
 
-      <br>
-      <div class="level p-0 m-0 kp-noBottomMargin">
-
-      <!--  <button class="button is-small is-light" id="clusterButton">
-          <span class="icon is-small"><i class="fas fa-location-arrow" aria-hidden="true"></i></span>
-          <span>Cluster Markers by Location</span>
-        </button>
-      -->
-
-        <button class="button is-small is-light js-modal-trigger" id="instructButton" data-target="modal-js-example">
-          <span class="icon is-small"><i class="fas fa-question" aria-hidden="true"></i></span>
-          <span>How to Use the Mapper</span>
-        </button>
-
-        <button class="button is-small is-light" id="saveDataButton">
-          <span class="icon is-small"><i class="fas fa-save" aria-hidden="true"></i></span>
-         <span>Download Data</span>
-       </button>
-
-        <button class="button is-small is-light" id="openButton">
-          <span class="icon is-small"><i class="fas fa-window-restore" aria-hidden="true"></i></span>
-          <span>Open Table in New Window</span>
-        </button>
-      </div>
+      <!-- Buttons for vis stuff -->
+      <div class="level is-7 p-0 m-0 kp-noBottomMargin">
+        <div class="level-item">
+          <button class="button is-small has-text-dark has-background-link-light is-rounded js-modal-trigger" id="instructButton" data-target="modal-js-example">
+            <span class="icon is-small"><i class="fas fa-question" aria-hidden="true"></i></span>
+            <span>How to Use the Mapper</span>
+          </button>
+        </div>
+        <div class="level-item">
+          <button class="button is-small ihas-text-dark has-background-link-light is-rounded" id="saveDataButton">
+            <span class="icon is-small"><i class="fas fa-save" aria-hidden="true"></i></span>
+           <span>Download Data</span>
+         </button>
+       </div>
+       <div class="level-item">
+         <button class="button is-small has-text-dark has-background-link-light is-rounded" id="openButton">
+           <span class="icon is-small"><i class="fas fa-window-restore" aria-hidden="true"></i></span>
+           <span>Open Table in New Window</span>
+         </button>
+       </div>
+    </div>
 
       <!-- Map and Table -->
       <div class="columns is-gapless kp-noBottomMargin">
@@ -261,6 +258,7 @@
 
     <!-- Contact -->
     <footer class="footer kp-footer">
+      <a class="kp-anchor" id="contact"></a>
       <div class="content has-text-centered">
         <p class="title is-5">Contact</p>
         Questions or comments may be directed to Daisy Williams at <a class="kp-mail" href="mailto:daisyoli@uoregon.edu">daisyoli@uoregon.edu</a>
@@ -277,6 +275,7 @@
     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster-src.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.20/lodash.min.js"></script>
     <script src="https://unpkg.com/leaflet.featuregroup.subgroup@1.0.2/dist/leaflet.featuregroup.subgroup.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OverlappingMarkerSpiderfier-Leaflet/0.2.6/oms.min.js"></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
     <script>
       var theNavigation = $(".navbar");
@@ -305,6 +304,9 @@
     <script src="./scripts/modal.js"></script>
     <script src="./scripts/data2csv.js"></script>
     <script src="./scripts/stateAndGlobal.js"></script>
+
+    <script src="./fakeData.js"></script>
+
     <script src="./scripts/map.js"></script>
     <script src="./scripts/table.js"></script>
     <script src="./scripts/timeline.js"></script>

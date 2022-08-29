@@ -4,10 +4,8 @@
 // 10/02/2021
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-const defaultView = [24.41210088744385, -57.39257812500001];
-let defaultZoom =2;
-let defaultBounds = undefined;
-let markerBounds = undefined;
+const defaultView = [17.8622043251, -90.0353411];
+let defaultZoom = 2;
 
 // --- Create the map the div #map --- //
 var map = L.map('map',
@@ -17,6 +15,11 @@ var map = L.map('map',
                 .setView(defaultView, defaultZoom);
 map.on("popupopen", function(evt){currentPopup = evt.popup});
 
+const popup = new L.Popup({
+  closeButton: true,
+  offset: new L.Point(0.5, -24)
+});
+
 // Resize the map when it's containing DOM changes size
 const resizeObserver = new ResizeObserver(() => {
   map.invalidateSize();
@@ -24,11 +27,9 @@ const resizeObserver = new ResizeObserver(() => {
 const mapDiv = document.getElementById("map");
 resizeObserver.observe(mapDiv);
 
-
 // Add the tile layer
 // Tile options: https://carto.com/help/building-maps/basemap-list/
-let tileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png',
-                        ).addTo(map);
+let tileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}.png').addTo(map);
 
 // Create a home and fit to marker bounds button
 L.Control.zoomHome = L.Control.extend({
@@ -47,7 +48,6 @@ L.Control.zoomHome = L.Control.extend({
         var controlName = 'gin-control-zoom',
             container = L.DomUtil.create('div', controlName + ' leaflet-bar'),
             options = this.options;
-
         this._zoomInButton = this._createButton(options.zoomInText, options.zoomInTitle,
         controlName + '-in', container, this._zoomIn);
         this._zoomHomeButton = this._createButton(options.zoomHomeText, options.zoomHomeTitle,
@@ -76,10 +76,10 @@ L.Control.zoomHome = L.Control.extend({
     },
 
     _zoomHome: function (e) {
-        map.setView(defaultBounds, defaultZoom);
+        map.setView(defaultView, defaultZoom);
     },
     _zoomBounds: function (e) {
-        map.fitBounds(markerBounds, { padding: [5, 5] });
+        map.fitBounds(bounds, { padding: [5, 5] });
     },
 
     _createButton: function (html, title, className, container, fn) {
@@ -116,11 +116,8 @@ L.Control.zoomHome = L.Control.extend({
 var zoomHome = new L.Control.zoomHome();
 zoomHome.addTo(map);
 
-
-// --- Create the markers --- //
-
-// Marker-icons for each client or building tyoe (Relies in iconMap.js)
-let preDefinedMarkers = {}
+// Marker-icons for each client or building tyoe (Relies in iconMap.js
+let preDefinedMarkers={}
 for(m in iconMap){
   preDefinedMarkers[m] = {};
   for (b in iconMap[m]){
@@ -134,7 +131,6 @@ for(m in iconMap){
      });
    }
 }
-
 
 // Create the marker groups by type
 let markerGroups = {};
@@ -165,7 +161,6 @@ for(let att in iconMap){
   }
 }
 
-
 // Create all of the marker layers on intialize
 var markerClusterArrays = {};
 for(d in data){
@@ -189,64 +184,52 @@ for(d in data){
     let lon = data[d]['Lon'];
     let marker = L.marker([lat,lon],
                           {icon: preDefinedMarkers[att][type]},
-                          {title: data[d]['Name']});
+                          {title: data[d]['Name']}).on('click',function(e) {
+                            let marker = e.target;
+                            popup.setContent(marker.desc);
+                            popup.setLatLng([marker.data.Lat, marker.data.Lon]);//marker.getLatLng());
+                            map.openPopup(popup);
+
+                            // Scroll the table to this row
+                            scroll2Row(marker);
+                          });;
     marker.data = data[d];
-    marker.bindTooltip(makeLabel(data[d]));
+    marker.index = parseInt(d);
+    marker.desc =
+    marker.bindTooltip(data[d]['Name']);
+    marker.desc = makeLabel(data[d]);
     markerClusterArrays[att][date][type].push(marker);
   }
 }
 
+function updateMap(){
 
-let locMarkerGroup = new L.MarkerClusterGroup();
-var i;
-for (i = 0; i < data.length; i++) {
-    var nom = data[i]['Name'];
-    var latitude = data[i]['Lat'];
-    var longitude = data[i]['Lon'];
-    var content =
-        '<div>' +
-        '<h3>' + nom + '</h3>' +
-        '</div>';
-    var marker = L.marker([latitude, longitude]);
-    marker.bindPopup(content);
-    locMarkerGroup.addLayer(marker); // add marker to the clustergroup
-}
- map.addLayer(locMarkerGroup); // add clustergroup to the map
+  // Remove all layers
+  if(currentMarkers.length > 0){
+       map.eachLayer((layer) => {
+         if(layer._url === undefined)
+           layer.remove();
+       });
+       currentMarkers = [];
+  }
 
- / - -- -- - - --- - -- - - --- - ---- -- --- -- - -- -  //
- // Map
- // - -- -- - - --- - -- - - --- - ---- -- --- -- - -- -  //
+  // Filter the data by the current dates and types
+  // Get the markers layers to add, filtered by date
+  var filteredByDates = _.pickBy(markerClusterArrays[currentAttribute], function(value, key) {
+     return date2Int(currentDates[0]) <= key && key <= date2Int(currentDates[1]);
+  });
 
- // When the map moves, update the list
- //map.on('move', function() {updateList();})
- //   .on('zoom', function() {updateList();});
-
- function updateMapMarkers(){
-
-   if(currentMarkers.length > 0){
-     map.eachLayer((layer) => {
-       if(layer._url === undefined)
-         layer.remove();
+  // Get the marker layers to add, filtered by type
+  var filteredByType = {};
+  for(let f in filteredByDates) {
+     let types = _.pickBy(filteredByDates[f], function(value, key){
+      return currentTypes.indexOf(key) > -1;
      });
-     currentMarkers = [];
-   }
+     if(Object.keys(types).length > 0)
+       filteredByType[f] = types;
+  }
 
-   // Get the markers layers to add, filtered by date
-   var filteredByDates = _.pickBy(markerClusterArrays[currentAttribute], function(value, key) {
-      return date2Int(currentDates[0]) <= key && key <= date2Int(currentDates[1]);
-   });
-
-   // Get the marker layers to add, filtered by type
-   var filteredByType = {};
-   for(let f in filteredByDates) {
-      let types = _.pickBy(filteredByDates[f], function(value, key){
-       return currentTypes.indexOf(key) > -1;
-      });
-      if(Object.keys(types).length > 0)
-        filteredByType[f] = types;
-   }
-
-   // Create and add the subgroups
+  // Create and add the subgroups
    for(let date in filteredByType){
      for (let type in filteredByType[date]){
        let mySubGroup = L.featureGroup.subGroup(markerGroups[currentAttribute][type], filteredByType[date][type]);
@@ -280,4 +263,4 @@ for (i = 0; i < data.length; i++) {
 
    // Update the list of data
    updateList();
-  }
+}
