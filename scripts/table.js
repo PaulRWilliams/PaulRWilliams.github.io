@@ -4,23 +4,29 @@
 // 10/02/2021
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-
 // - -- -- - - --- - -- - - --- - ---- -- --- -- - -- -  //
 // The tables
 // - -- -- - - --- - -- - - --- - ---- -- --- -- - -- -  //
+
+// The columns we are interested in
 const infoTableCols = ["Name", "Date", "Location", "Client", "Building Type", "Client Type", "Status", "Style", "Notes", "Sources"];
 
-let info_table = d3.select("#info-table")
+// Create the table
+infoTable = d3.select("#info-table")
                    .append("table")
                    .attr("class", "table is-striped is-fullwidth is-hoverable is-bordered is-scrollable p-0 m-0")
-                   .attr("id", "kp-table");
-let info_header = info_table.append("thead").append("tr");
+                   .attr("id", "list-table");
+let info_header = infoTable.append("thead").append("tr");
 info_header.selectAll("th")
   .data(infoTableCols)
   .enter()
   .append("th")
-  .attr("class", "is-size-7")
+  .attr("class", "is-size-7  has-background-info-light")
   .style("text-align", "left")
-  .text((d)=>(d));
+  .text((d)=>(d))
+infoTableBody = infoTable.append("tbody");
 
-let infoTablebody = info_table.append("tbody");
+// Listen for click to sort the table
+document.querySelectorAll(`th`).forEach((th, position) => {
+ th.addEventListener(`click`, evt => sortTable(position));
+});

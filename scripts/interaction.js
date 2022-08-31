@@ -11,64 +11,98 @@
 // Open new window on button click
 document.getElementById("openButton").addEventListener("click", function(){
 
-  // Open the new window
+  //-- Open the new window --//
   if(openWindowButtonClicks %2 === 0){
 
     // Change the button text
     document.getElementById("openButton").innerHTML = '<span class="icon is-small"><i class="fas fa-window-maximize" aria-hidden="true"></i></span> <span>Put Table Back into Page</span>';
 
-    // Open a new window
-    var newWindowContent = document.getElementById('info-table').innerHTML;
-    newWindow = window.open("", "", "width=500,height=400");
-    newWindow.document.write('<head><meta charset="UTF-8"><title>Architectural Works by Paul R. Williams</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css"/><link rel="stylesheet" href="./css/prw.css" /></head>')
+    // Get the table DOM
+    var table = document.querySelector('#info-table');
 
-    newWindow.document.write(newWindowContent);
+    // Create a copy of the table
+    var tableClone = table.cloneNode(true);
+
+    // Update the ID
+    tableClone.id = 'info-table-remote';
+    tableClone.classList.remove("kp-table");
+    tableClone.classList.add("kp-table-remote");
+
+    // Open a new window
+    newWindow = window.open("", "", "width=1200,height=670");
+
+    // Write the header for styling
+    newWindow.document.write('<head><meta charset="UTF-8"><title>Architectural Works by Paul R. Williams</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css"/><link rel="stylesheet" href="./css/prw.css" /></head><body></body>')
+
+    // Get the root of the window DOM
+    let newWindowRoot = d3.select(newWindow.document.body);
+    newWindowRoot.append(() => tableClone);
+
+    let list = newWindow.document.querySelector('#list-table');
+    list.id = 'list-table-remote'
+
+    // Listen for click to sort the table
+    newWindow.document.querySelectorAll(`th`).forEach((th, position) => {
+     th.addEventListener(`click`, evt => sortRemoteTable(position));
+    });
+
+    // Hide the table
+    table.style.display = 'none';
+
+    // Expand the map
+    var map = document.getElementById('map-column');
+    map.classList.remove("is-6");
+    map.classList.add("is-full");
 
     // Put the table back if we close this new window
     newWindow.addEventListener("beforeunload", function (e) {
 
       // Change the button text
-      document.getElementById("openButton").innerHTML =   '<span class="icon is-small"><i class="fas fa-window-restore" aria-hidden="true"></i></span> <span>Open Table in New Window</span>';
+      document.getElementById("openButton").innerHTML = '<span class="icon is-small"><i class="fas fa-window-restore" aria-hidden="true"></i></span> <span>Open Table in New Window</span>';
 
-      // Show the table
-      var table = document.getElementById('info-table');
+      // Get the table DOM and show
+      var table = document.querySelector('#info-table');
       table.style.display = 'block';
 
       // Shrink the map
       var map = document.getElementById('map-column');
       map.classList.add("is-6");
       map.classList.remove("is-full")
+
+      // Listen for click to sort the table
+      document.querySelectorAll(`th`).forEach((th, position) => {
+       th.addEventListener(`click`, evt => sortTable(position));
+      });
+
     });
 
-
-    // Hide the table
-    var table = document.getElementById('info-table');
-    table.style.display = 'none';
-
-    // Expand the map
-    var map = document.getElementById('map-column');
-    map.classList.remove("is-6");
-    map.classList.add("is-full")
+    // Scroll to the selected row
+    scroll2RowRemote();
   }
-  // Close the new window
+
+  //--  Close the new window --//
   else{
 
     // Change the button text
-    document.getElementById("openButton").innerHTML =   '<span class="icon is-small"><i class="fas fa-window-restore" aria-hidden="true"></i></span> <span>Open Table in New Window</span>';
+    document.getElementById("openButton").innerHTML = '<span class="icon is-small"><i class="fas fa-window-restore" aria-hidden="true"></i></span> <span>Open Table in New Window</span>';
 
     // Close the window
     newWindow.close();
 
-    // Show the table
-    var table = document.getElementById('info-table');
+    // Get the table DOM and show
+    var table = document.querySelector('#info-table');
     table.style.display = 'block';
 
     // Shrink the map
     var map = document.getElementById('map-column');
     map.classList.add("is-6");
     map.classList.remove("is-full")
-  }
 
+    // Listen for click to sort the table
+    document.querySelectorAll(`th`).forEach((th, position) => {
+     th.addEventListener(`click`, evt => sortTable(position));
+    });
+  }
    // Update the number of clicks
    openWindowButtonClicks = openWindowButtonClicks+1;
 });
@@ -99,123 +133,182 @@ document.querySelectorAll("input[name='typeRadio']").forEach((input) => {
 
 // When the map moves, update the list
 function updateMapMarkers(){
+
   // Update the map
   updateMap();
 
   // Update the list of data
   updateList();
+  updateRemoteList();
 }
 
 // - -- -- - - --- - -- - - --- - ---- -- --- -- - -- -  //
 // List
 // - -- -- - - --- - -- - - --- - ---- -- --- -- - -- -  //
 
+// Unhighlight everything
+function unHighlight(){
+
+  var rows = document.querySelectorAll('#list-table tr');
+  for (var i=0;i <rows.length;i++){
+    rows[i].style.border="1px solid black";
+  }
+}
+function unHighlightRemote(){
+
+  if(newWindow === undefined)
+    return;
+
+  var rows = newWindow.document.querySelectorAll('#list-table-remote tr');
+    for (var i=0;i <rows.length;i++){
+      rows[i].style.border="1px solid black";
+    }
+}
+
 // Scroll the line that corresponds to the clicked marker
-function scroll2Row(marker){
+function scroll2Row(){
 
-  console.log("Scroll2", marker);
+  // If we don't have a selection, dont do anything
+  if(currentMarkerSelection === undefined)
+    return;
 
-  var elm = document.getElementById(marker.data.Name);
+  unHighlight();
+
+  // Highlight the clicked element
+  var elm = document.getElementById(currentMarkerSelection.data.Name);
+  elm.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center'
+  });
+  elm.style.border='2px double DarkTurquoise';
+
+}
+// Scroll the line that corresponds to the clicked marker
+function scroll2RowRemote(padding=undefined){
+
+  // If we don't have a new window, return
+  if(newWindow === undefined)
+    return;
+
+  // If we don't have a selection, dont do anything
+  if(currentMarkerSelection === undefined)
+    return;
+
+  // Unhighlight all rows
+  unHighlightRemote();
+
+  // Highlight the clicked element
+  var elm = newWindow.document.getElementById(currentMarkerSelection.data.Name);
   elm.scrollIntoView({
       behavior: 'smooth',
       block: 'center'
   });
 
-  elm.style.border='2px double Red';
-
-  /*let line = $('#info-table tr').filter(function(){
-    console.log($.trim($('td', this).eq(0).text())==marker.data.Name);
-   return $.trim($('td', this).eq(0).text())==marker.data.Name;
-  });
-    console.log("line",line);
-    console.log("not line", $("tr").index(marker.data.Name));
-*/
-
-/*
-
-
-  // Grab the table where it lives (here or in the new window)
-  var currentWindow = document;
-  if(newWindow !== undefined){
-    currentWindow =  newWindow.document;
-  }
-
-  // Get all the rows
-  var rows = currentWindow.querySelectorAll('#kp-table tr');
-
-  // Unhighlight the rows
-  for (var i=0;i <rows.length;i++){
-    rows[i].style.backgroundColor="White";
-  }
-
-  // line is zero-based
-  // line is the row number that you want to see into view after scroll
-  rows[line+1].scrollIntoView({
-      behavior: 'smooth',
-      block: 'center'
-  });
-  rows[line+1].style.backgroundColor='#EEE8AA';
-*/
+  elm.style.border='2px double DarkTurquoise';
 }
 
-function updateList (){
+// Sort table functions
+function compareValues(a, b) {
+  // return -1/0/1 based on what you "know" a and b
+  // are here. Numbers, text, some custom case-insensitive
+  // and natural number ordering, etc. That's up to you.
+  // A typical "do whatever JS would do" is:
+  return (a<b) ? -1 : (a>b) ? 1 : 0;
+}
+function sortRemoteTable(colnum){
+  console.log("sort remote", colnum);
 
-  currentMapZoom = map.getZoom();
+  // Get the table
+  var table = newWindow.document.getElementById("list-table-remote");
 
-  // Get the bounding box of the map
-  var bounds = map.getBounds();
-  currentData = [];
+  // get all the rows in this table:
+  let rows = Array.from(table.querySelectorAll(`tr`));
+
+  // but ignore the heading row:
+  rows = rows.slice(1);
+
+  // set up the queryselector for getting the indicated
+  // column from a row, so we can compare using its value:
+  let qs = 'td:eq('+colnum+')';
+
+  // and then just... sort the rows:
+  rows.sort( (r1,r2) => {
+    // get each row's relevant column
+    let t1 = $(r1).find(qs).text();
+    let t2 = $(r2).find(qs).text();
+
+    // and then effect sorting by comparing their content:
+    return compareValues(t1,t2);
+  });
+
+  // and then the magic part that makes the sorting appear on-page:
+  rows.forEach(row => table.appendChild(row));
+
+  // Scroll to the current selection, if we have one
+  scroll2RowRemote();
+}
+function sortTable(colnum) {
+
+
+  // Grab the table
+  var table = document.getElementById("list-table");
+
+  // get all the rows in this table:
+  let rows = Array.from(table.querySelectorAll(`tr`));
+
+  // but ignore the heading row:
+  rows = rows.slice(1);
+
+  // set up the queryselector for getting the indicated
+  // column from a row, so we can compare using its value:
+  let qs = 'td:eq('+colnum+')';
+
+  // and then just... sort the rows:
+  rows.sort( (r1,r2) => {
+    // get each row's relevant column
+    let t1 = $(r1).find(qs).text();
+    let t2 = $(r2).find(qs).text();
+
+    // and then effect sorting by comparing their content:
+    return compareValues(t1,t2);
+  });
+
+  // and then the magic part that makes the sorting appear on-page:
+  rows.forEach(row => table.appendChild(row));
+
+  // Scroll to the current selection, if we have one
+  scroll2Row();
+}
+
+// Update the tables
+function updateRemoteList(){
+
+  if(newWindow === undefined)
+    return;
 
   // Iterate over the current markers
+  let currentData = [];
   for(i in currentMarkers){
     for(j in currentMarkers[i]){
-
-      let markerData = currentMarkers[i][j].data
-      let latLon = L.latLng(markerData.Lat, markerData.Lon);
-
-      if(bounds.contains(latLon)){
-        currentData .push(markerData);
-      }
+      currentData.push(currentMarkers[i][j].data);
     }
   }
 
-  console.log("currentData", currentData);
+  let tableBody = newWindow.document.querySelector('#list-table-remote').getElementsByTagName('tbody')[0];
 
   // Add the rows and columns to the info table
-  let info_rows = infoTablebody.selectAll("tr")
-                      .data(currentData)
-                      .attr("id", (d)=>(d.Name))
-                      .join(
-                        enter => enter.append("tr"),
-                        update => update,
-                        exit => exit.remove()
-                      );
-  let info_cells = info_rows.selectAll("td")
-             // each row has data associated; we get it and enter it for the cells.
-                 .data(function(d) {
-                     let row = infoTableCols.map(x => d[x]);
-                     return row;
-                 })
-                 .join(
-                   enter => enter.append("td").text((d)=>(d)),
-                   update => update.text((d)=>(d)),
-                   exit => exit.remove()
-                 )
-                 .attr("class", "is-size-7");
-
-/*
- // Add the rows and columns to the info table
- let note_rows = noteTablebody.selectAll("tr")
+  let info_rows = d3.select(tableBody).selectAll("tr")
                      .data(currentData)
+                     .attr("id", (d)=>(d.Name))
                      .join(
                        enter => enter.append("tr"),
                        update => update,
                        exit => exit.remove()
                      );
- let note_cells = note_rows.selectAll("td")
+ let info_cells = info_rows.selectAll("td")
             // each row has data associated; we get it and enter it for the cells.
                 .data(function(d) {
-                    let row = noteTableCols.map(x => d[x]);
+                    let row = infoTableCols.map(x => d[x]);
                     return row;
                 })
                 .join(
@@ -224,7 +317,41 @@ function updateList (){
                   exit => exit.remove()
                 )
                 .attr("class", "is-size-7");
-                */
+
+}
+
+function updateList (){
+
+  // Iterate over the current markers
+  let currentData = [];
+  for(i in currentMarkers){
+    for(j in currentMarkers[i]){
+      currentData.push(currentMarkers[i][j].data);
+    }
+  }
+
+
+  // Add the rows and columns to the info table
+  let info_rows = infoTableBody.selectAll("tr")
+                     .data(currentData)
+                     .attr("id", (d)=>(d.Name))
+                     .join(
+                       enter => enter.append("tr"),
+                       update => update,
+                       exit => exit.remove()
+                     );
+ let info_cells = info_rows.selectAll("td")
+            // each row has data associated; we get it and enter it for the cells.
+                .data(function(d) {
+                    let row = infoTableCols.map(x => d[x]);
+                    return row;
+                })
+                .join(
+                  enter => enter.append("td").text((d)=>(d)),
+                  update => update.text((d)=>(d)),
+                  exit => exit.remove()
+                )
+                .attr("class", "is-size-7");
  }
 
 // DRIVE

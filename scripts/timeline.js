@@ -424,6 +424,8 @@ function updateTimeline(){
                   d3.selectAll("#timeline-circles-"+domID).attr("opacity", 1.0); // Timeline Circles
                 }
                 t['display'] = !t['display'];
+
+                currentMarkerSelection = undefined;
                 updateMapMarkers();
               });
 
@@ -475,6 +477,8 @@ function updateTimeline(){
         d3.selectAll("#timeline-circles-"+domID).attr("opacity", 1.0); // Timeline Circles
       }
       t['display'] = !t['display'];
+
+      currentMarkerSelection = undefined;
       updateMapMarkers();
     });
 

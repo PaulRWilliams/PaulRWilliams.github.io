@@ -183,8 +183,8 @@
            <span class="icon is-small"><i class="fas fa-window-restore" aria-hidden="true"></i></span>
            <span>Open Table in New Window</span>
          </button>
-       </div>
-    </div>
+        </div>
+      </div>
 
       <!-- Map and Table -->
       <div class="columns is-gapless kp-noBottomMargin">
@@ -305,8 +305,6 @@
     <script src="./scripts/data2csv.js"></script>
     <script src="./scripts/stateAndGlobal.js"></script>
 
-    <script src="./fakeData.js"></script>
-
     <script src="./scripts/map.js"></script>
     <script src="./scripts/table.js"></script>
     <script src="./scripts/timeline.js"></script>
@@ -321,16 +319,58 @@
           <div class="tile is-ancestor">
             <div class="tile is-parent is-vertical">
               <div class="tile is-child">
-                The PRW Career Mapper consists of an interactive timeline and a corresponding map that displays the location of projects from the timeline. A side bar also lists the projects that are being displayed in text form.
-              </div>
-              <div class="tile is-child">
+                The PRW Career Mapper is an interactive visualization tool that shows the timespan and locations
+                of works by architect Paul R Williams. The tool consists of a map, showing the global locations
+                of projects, clustered by location and project type. Map markers are colored by the types shown
+                in the timeline, and interactions in the timeline can filter map markers by date and type. A textual
+                table list shows the markers filtered by timeline selections.
+                <br><br>
+
                 Users can filter what they see expressed in the timeline and map in multiple ways.
-                They can move the time sliders to select a specific time range of interest and choose whether the display of projects will be categorized based on building use or client type. Results can be further refined by checking or unchecking the colored boxes next to each sub-category of the timeline.
+                They can move the time sliders to select a specific time range of interest and choose
+                whether the display of projects will be categorized based on building use or client type.
+                Results can be further refined by checking or unchecking the colored boxes next to each
+                sub-category of the timeline.<br>
+
+                The markers displayed in the map are color-coded to match the sub-category filters.
+                Hovering over any of the markers on the map will display the name of the project and clicking a
+                marker will reveal additional information about that particular building as well as highlight that
+                project in the list. Zooming in will allow you to see each individual project in cases were
+                markers are closely located.
               </div>
-              <div class="tile is-child">
-                The markers displayed in the map are color-coded to match the sub-category filters. Hovering over any of the markers on the map will display additional information about that particular building. Zooming in will allow you to see each individual project in cases were markers are closely located.
-              </div>
-            </div>
+
+                  <div class="tile is-child">
+                    <div class="title is-6">Using the Map</div>
+                      The map shows the geographic locations of the projects, clustered by location and type (building or client).
+                      Users can pan and zoom using standard mouse interfaces. Clicking on a numbered marker expands the locational
+                      cluster. Clicking on an icon marker will reveal the project in the list. On the left of the map, there are 4 buttons that
+                      control viewing. From top to bottom: the plus button will zoom out the viewpoint, the home button will reset the
+                      viewpoint to the original view, the polygon button will zoom the viewpoint to the markers currently displayed, and
+                      the minus button will zoom out. The toggle button below the map will switch the type being shown between building
+                      and client type. The boxes in the timeline legend will remove or add particular types of markers to the map.
+                  </div>
+                  <div class="tile is-child">
+                    <div class="title is-6">Using the Timeline</div>
+                      The timeline shows the length of time in which Paul R. Williams was active. The bottom-most line shows the total
+                      number of projects each year, the exact number can be seen by hovering over a dot. The colored lines show the works
+                      divided by type (either building or client). Users can switch the type using the toggle button above the timeline, which
+                      also changes the marker types in the map. The timeline can be used to filter the active map markers by time by using the mouse
+                      to move the half-circle handle on either side of the "All" timeline. This will also change the map markers and the textual list.
+                      The squares of the timeline legend can be clicked to toggle that sub-type on or off, also reflected in the map and list.
+                  </div>
+                  <div class="tile is-child">
+                    <div class="title is-6">Using the Textual List</div>
+                    The textual list shows detailed information on all projects shown in the timeline. The list is not filtered by what is
+                    visible in the map, but does highlight a project when a map marker is clicked on. Users can sort the table by clicking on a column
+                    header cell. The list can also be popped out into a new window for a better viewing experience. Closing that new window will put
+                    the table back into the tool.
+                  </div>
+                  <div class="tile is-child">
+                    <div class="title is-6">Downloading the Data</div>
+                    By clicking on the "Download Data" button, users can download the entire data set. The data file will be saved as "prwData.csv" and
+                    can be opened in a text editor or imported into excel.
+                  </div>
+
           </div>
         </div>
       </div>

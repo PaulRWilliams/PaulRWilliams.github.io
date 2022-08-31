@@ -16,6 +16,18 @@ var openWindowButtonClicks = 0;
 // The new window we create for the table
 var newWindow = undefined;
 
+// Table variables
+var infoTable = undefined;
+var infoTableBody = undefined;
+var remoteInfoTable = undefined;
+var remoteTableBody = undefined;
+
+// The current makerLayers
+let currentMarkers = [];
+
+// The currently selected marker
+var currentMarkerSelection = undefined;
+
 // --- Attribute is building vs client, types are within the attribute
 // Create labels for each attribute
 let attributes = {"building":"Building Type", "client":"Client Type"};
@@ -69,18 +81,5 @@ for(types in attributes){
   });
 }
 
-
-// The current data for the list
-let currentData = [];
-
-// The current makerLayers
-let currentMarkers = [];
-
-// The current popup for hovering
-var currentPopup;
-
-// The current map zoom
-var currentMapZoom;
-
-// Toggle the cluster button
-var clusterButtonClicks = 0;
+// The map Bounds
+var bounds = undefined;

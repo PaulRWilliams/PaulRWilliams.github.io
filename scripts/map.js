@@ -13,12 +13,20 @@ var map = L.map('map',
                  minZoom: 1,
                  worldCopyJump: false})
                 .setView(defaultView, defaultZoom);
-map.on("popupopen", function(evt){currentPopup = evt.popup});
 
 const popup = new L.Popup({
   closeButton: true,
   offset: new L.Point(0.5, -24)
 });
+// Unhighlight corresponding table element when poppver is closed
+popup.on('remove', function() {
+  unHighlight();
+  unHighlightRemote();
+});
+map.on('click', function(e) {
+        currentMarkerSelection = undefined;
+});
+
 
 // Resize the map when it's containing DOM changes size
 const resizeObserver = new ResizeObserver(() => {
@@ -79,7 +87,7 @@ L.Control.zoomHome = L.Control.extend({
         map.setView(defaultView, defaultZoom);
     },
     _zoomBounds: function (e) {
-        map.fitBounds(bounds, { padding: [5, 5] });
+        map.fitBounds(markerBounds, { padding: [5, 5] });
     },
 
     _createButton: function (html, title, className, container, fn) {
@@ -190,12 +198,16 @@ for(d in data){
                             popup.setLatLng([marker.data.Lat, marker.data.Lon]);//marker.getLatLng());
                             map.openPopup(popup);
 
+                            // Save the current marker
+                            currentMarkerSelection = marker;
+
                             // Scroll the table to this row
-                            scroll2Row(marker);
-                          });;
+                            scroll2Row();
+                            scroll2RowRemote();
+
+                          });
     marker.data = data[d];
     marker.index = parseInt(d);
-    marker.desc =
     marker.bindTooltip(data[d]['Name']);
     marker.desc = makeLabel(data[d]);
     markerClusterArrays[att][date][type].push(marker);
@@ -263,4 +275,5 @@ function updateMap(){
 
    // Update the list of data
    updateList();
+   updateRemoteList();
 }
