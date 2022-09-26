@@ -21,9 +21,12 @@ info_header.selectAll("th")
   .data(infoTableCols)
   .enter()
   .append("th")
-  .attr("class", "is-size-7  has-background-info-light")
+  .attr("title", "Click to sort by this column.")
+  .attr("class", "is-size-7")
   .style("text-align", "left")
-  .text((d)=>(d))
+  .text((d)=>(d));
+  //.append("i")
+  //.attr("class", "fas fa-cloud kp-right");
 infoTableBody = infoTable.append("tbody");
 
 // Listen for click to sort the table

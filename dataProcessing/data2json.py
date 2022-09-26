@@ -10,8 +10,9 @@
 # This script assumes python version 3 is available with pandas.
 # * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 import json
-import sys
+import sys, os
 import pandas as pd
+from pathlib import Path
 
 # Function to convert a CSV to JSON saved as a js file
 def make_json(file):
@@ -31,16 +32,19 @@ def make_json(file):
 
     # Convert columns to the right data type
     df['Date'] = df['Date'].astype(int)
-    df = df.drop(['Lat', 'Lon'], axis=1)
-    df['Lat'] = df['Generated Lat'].astype(float)
-    df['Lon'] = df['Generated Lon'].astype(float)
-    df = df.drop(['Generated Lat', 'Generated Lon'], axis=1)
+    df['Latitude'] = df['Latitude'].astype(float)
+    df['Longitude'] = df['Longitude'].astype(float)
 
     #  Convert to json
     df = df.to_json(orient='records')
 
+    # Get the filename and the outfile name
+    filename = Path(file)
+    outfile = str(filename.parent.parent)+"/data.js"
+    print("Wrote to:", outfile)
+
     # Write the file to a json stored in an .js file
-    with open('../data.js', 'w', encoding='utf-8') as f:
+    with open(outfile, 'w', encoding='utf-8') as f:
         f.write("let data=")
         f.write(df)
 
@@ -48,7 +52,7 @@ def make_json(file):
 if __name__ == '__main__':
 
     if(len(sys.argv) < 2):
-        print("Usage: python xlsx2json.py <file.xlsx>")
+        print("Usage: python data2json.py <file.xlsx>")
         sys.exit()
     file = sys.argv[1]
     make_json(file)

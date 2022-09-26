@@ -17,15 +17,15 @@ from pathlib import Path
 def wiggleLocations(file):
 
     # Read in the data
-    df = pd.read_excel(file)
-    df['Generated Lat'] = pd.to_numeric(df['Generated Lat'])
-    df['Generated Lon'] = pd.to_numeric(df['Generated Lon'])
+    df = pd.read_excel(file, engine='openpyxl')
+    df['Latitude'] = pd.to_numeric(df['Latitude'])
+    df['Longitude'] = pd.to_numeric(df['Longitude'])
 
     # Find the duplicated locations
-    df['Status'] = 'Unique'
-    df.loc[df[df.loc[:, ['Generated Lat', 'Generated Lon']].duplicated(keep=False)].index, 'Status'] = 'Duplicate'
-    dups = df.loc[df['Status'] == 'Duplicate']
-    dups = dups.sort_values(by=['Generated Lat'])
+    df['Dups'] = 'Unique'
+    df.loc[df[df.loc[:, ['Latitude', 'Longitude']].duplicated(keep=False)].index, 'Dups'] = 'Duplicate'
+    dups = df.loc[df['Dups'] == 'Duplicate']
+    dups = dups.sort_values(by=['Latitude'])
 
     # Save the processed indexes
     processed = []
@@ -38,19 +38,19 @@ def wiggleLocations(file):
             processed.append(index)
 
         # Get the lat/lon
-        lat = row['Generated Lat']
-        lon = row['Generated Lon']
+        lat = row['Latitude']
+        lon = row['Longitude']
 
         # Find all rows that match this location
-        matches = dups.loc[(dups['Generated Lat'] == lat) & (dups['Generated Lon'] == lon)]
+        matches = dups.loc[(dups['Latitude'] == lat) & (dups['Longitude'] == lon)]
 
         # Iterate over the matches
         for idx, r in matches.iterrows():
 
             # Add a random # to the location
             rand = np.random.uniform(-.001, .001)
-            df.loc[idx,'Generated Lon']  = r['Generated Lon'] + rand
-            df.loc[idx,'Generated Lat']  = r['Generated Lat'] + rand
+            df.loc[idx,'Longitude']  = r['Longitude'] + rand
+            df.loc[idx,'Latitude']  = r['Latitude'] + rand
 
             # Add this index to the processed list
             processed.append(index)
@@ -58,6 +58,7 @@ def wiggleLocations(file):
     # Write to a new excel file
     filename = Path(file)
     outfile = str(filename.with_suffix(''))+"_wiggle"+str(filename.suffix)
+    print("Wrote to:", outfile)
     df.to_excel(outfile)
 
 

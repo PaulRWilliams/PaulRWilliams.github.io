@@ -14,9 +14,9 @@ The output of this command is 2 files:
 * dataFile_geocoded.xlsx
 * addressesNotFound.txt
 
-The dataFile_geocoded.txt file has 2 new columns 'Generated Lat' and 'Generated Lon'. These values are either from openstreetmap or if not found, from the original 'Lat' and 'Lon' columns.
+The dataFile_geocoded.txt file has 2 new columns 'Latitude' and 'Longitude'. These values are either from openstreetmap or if not found, left blank and need help!
 
-addressesNotFound.txt gives a list of locations that openstreetmap couldn't find and thus those locations use the original 'Lat'/'Lon' column values.
+addressesNotFound.txt gives a list of locations that openstreetmap couldn't find.
 
 If you want to change the location of the not found addresses, change the dataFile_geocoded.xlsx file.
 
@@ -32,7 +32,7 @@ The output of this command is 1 file:
 
 3. Convert from xlsx to json for visualization.
 ```
-python xlsx2json.py dataFile_geocoded_wiggle.xlsx
+python data2json.py dataFile_geocoded_wiggle.xlsx
 ```
 This converts the data to a json string and writes out a javascript file that the visualization will read.
 

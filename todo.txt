@@ -2,6 +2,11 @@ TODO
 
 8/23/2022
 ---
+* change title to PRW Career Mapper
+  From Daisy:
+  In bold: PRW Career Mapper
+  Subheader: Explore the Architectural Works of Paul R. Williams
+
 * Add clustering by location
 * fix map reset/bounds based on markers being shown
 * icon clustering still hiding stuff (Las Vegas)

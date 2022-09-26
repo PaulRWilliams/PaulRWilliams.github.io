@@ -216,7 +216,8 @@ function compareValues(a, b) {
   return (a<b) ? -1 : (a>b) ? 1 : 0;
 }
 function sortRemoteTable(colnum){
-  console.log("sort remote", colnum);
+
+
 
   // Get the table
   var table = newWindow.document.getElementById("list-table-remote");

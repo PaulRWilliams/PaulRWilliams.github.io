@@ -7,6 +7,10 @@ body {
 /* Make links black */
 a{color: Black !important;}
 
+.column {
+  display: flex;
+}
+
 /* Set the color theme */
 .kp-header {
   background: Tan !important;
@@ -94,8 +98,17 @@ table {
 }
 th {
   position: sticky;
-  color: Red;
   top: 0;
+  cursor: pointer;
+  color: black;
+  background: AliceBlue;
+}
+th:hover{
+  color: black;
+  background: #e6f3ff;
+}
+.kp-right{
+   float: right;
 }
 
 /* Timeline */
@@ -144,19 +157,19 @@ th {
 }
 
 .legendRect{
-    fill: green;
-    opacity: 1.0;
+  cursor: pointer;
 }
+
 
 /* Timeline styles */
 .timeline-dots{
-    stroke-width: 0.5px;
-    shape-rendering:geometricPrecision;
+  shape-rendering:geometricPrecision;
+  cursor: context-menu;
 }
 .timeline-text{
     font-family: Verdana;
-    font-size: 10pt;
-    cursor: default;
+    /*font-size: 10pt;*/
+    cursor: pointer;
 }
 .timelineSliderRect{
     fill: AliceBlue;

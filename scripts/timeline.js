@@ -36,8 +36,8 @@ var xScale = d3.scaleTime().domain([string2Date(distinctDates[0]), string2Date(d
 var yScale = d3.scaleLinear();
 
 // The scale for timeline dot radii
-var radiusScale = d3.scaleLinear().range([5, 7.5])
-                  .domain([Math.min(...Object.values(datesCount)), Math.max(...Object.values(datesCount))]);
+var radiusScale = d3.scaleLinear().range([3.5, 8.5])
+                    .domain([Math.min(...Object.values(datesCount)), Math.max(...Object.values(datesCount))]);
 
 // Helper to go from position to date
 function pos2Date(pos) { return xScale.invert(pos); }
@@ -86,7 +86,8 @@ var div3 = d3.select("body").append("div").attr("class", "tooltip").style("opaci
 var startGuide = outerGroup.append("g")
                           .attr("class", "guideline")
                           .attr("id", "startGuide")
-                          .attr("transform", "translate(0, 0)");
+                          .attr("transform", "translate(0, 0)")
+                          .attr("cursor", "pointer");
 var startRect = startGuide.append("rect")
                           .attr("class", "rect-out")
                           .attr("width", 0);
@@ -103,11 +104,13 @@ var startLowKnob = startGuide.append("circle")
 var startText = startGuide.append("text")
                           .attr("class", "axis-label")
                           .attr("x", 0);
+
 // The end guideline
 var endGuide = outerGroup.append("g")
                          .attr("class", "guideline")
                          .attr("id", "endGuide")
-                         .attr("transform", "translate(0, 0)");
+                         .attr("transform", "translate(0, 0)")
+                         .attr("cursor", "pointer");
 var endRect = endGuide.append("rect")
                       .attr("class", "rect-out")
                       .attr("width", 100);
@@ -158,6 +161,38 @@ gradStart.append("stop")
          .attr("offset", "50%")
          .style("stop-color", "white")
          .attr("stop-opacity", 0);
+var gradStartHover = svg.append("defs")
+                            .append("linearGradient")
+                            .attr("id", "gradStartHover")
+                            .attr("x1", "0%")
+                            .attr("x2", "100%")
+                            .attr("y1", "0%")
+                            .attr("y2", "0%");
+gradStartHover.append("stop")
+        .attr("offset", "50%")
+        .style("stop-color", "LightSlateGrey")
+        .attr("stop-opacity", 1);
+gradStartHover.append("stop")
+        .attr("offset", "50%")
+        .style("stop-color", "white")
+        .attr("stop-opacity", 0);
+var gradStartClick = svg.append("defs")
+                            .append("linearGradient")
+                            .attr("id", "gradStartClick")
+                            .attr("x1", "0%")
+                            .attr("x2", "100%")
+                            .attr("y1", "0%")
+                            .attr("y2", "0%");
+gradStartClick.append("stop")
+        .attr("offset", "50%")
+        .style("stop-color", "DarkSlateGrey")
+        .attr("stop-opacity", 1);
+gradStartClick.append("stop")
+        .attr("offset", "50%")
+        .style("stop-color", "white")
+        .attr("stop-opacity", 0);
+
+
 var gradEnd = svg.append("defs")
                  .append("linearGradient")
                  .attr("id", "gradEnd")
@@ -173,28 +208,96 @@ gradEnd.append("stop")
        .attr("offset", "50%")
        .style("stop-color", "white")
        .attr("stop-opacity", 0);
+var gradEndHover = svg.append("defs")
+                          .append("linearGradient")
+                          .attr("id", "gradEndHover")
+                          .attr("x1", "100%")
+                          .attr("x2", "0%")
+                          .attr("y1", "0%")
+                          .attr("y2", "0%");
+gradEndHover.append("stop")
+                .attr("offset", "50%")
+                .style("stop-color", "LightSlateGrey")
+                .attr("stop-opacity", 1);
+gradEndHover.append("stop")
+                .attr("offset", "50%")
+                .style("stop-color", "white")
+                .attr("stop-opacity", 0);
+var gradEndClick = svg.append("defs")
+                          .append("linearGradient")
+                          .attr("id", "gradEndClick")
+                          .attr("x1", "100%")
+                          .attr("x2", "0%")
+                          .attr("y1", "0%")
+                          .attr("y2", "0%");
+gradEndClick.append("stop")
+                .attr("offset", "50%")
+                .style("stop-color", "DarkSlateGrey")
+                .attr("stop-opacity", 1);
+gradEndClick.append("stop")
+                .attr("offset", "50%")
+                .style("stop-color", "white")
+                .attr("stop-opacity", 0);
+
 var startCircle = slider.append("circle")
-                       .attr("transform", "translate(0, 15)")
-                       .attr("r", 16)
-                       .style("stroke","none")
-                       .style("fill","url(#gradStart)");
+                        .attr("transform", "translate(0, 15)")
+                        .attr("r", 16)
+                        .attr("stroke","none")
+                        .attr("fill","url(#gradStart)")
+                        .attr("cursor", "pointer")
+                        .on("mouseover", function(d){
+                          d3.select(this).attr("fill","url(#gradStartHover)");
+                          startLine.attr("stroke", "LightSlateGray");
+                        })
+                        .on("mouseout", function(d){
+                          d3.select(this).attr("fill","url(#gradStart)");
+                          startLine.attr("stroke", "Silver");
+                        });
+
 var endCircle = slider.append("circle")
-                     .attr("transform", "translate(0, 15)")
-                     .attr("r", 16)
-                     .style("stroke","none")
-                     .style("fill","url(#gradEnd)");// The group for the single timeline
+                      .attr("transform", "translate(0, 15)")
+                      .attr("r", 16)
+                      .attr("stroke","none")
+                      .attr("fill","url(#gradEnd)")
+                      .attr("cursor", "pointer")
+                      .on("mouseover", function(d){
+                       d3.select(this).attr("fill","url(#gradEndHover)");
+                       endLine.attr("stroke", "LightSlateGray");
+                     })
+                      .on("mouseout", function(d){
+                       d3.select(this).attr("fill","url(#gradEnd)");
+                       endLine.attr("stroke", "Silver");
+                     });
 
 // The drag behaviors
-var startGuideDrag = d3.drag().on("start", function(){startLine.attr("stroke", "DarkSlateGray");})
-                             .on("end", function(){ startLine.attr("stroke", "silver"); updateMapMarkers();});
+var startGuideDrag = d3.drag().on("start", function(){startLine.attr("stroke", "DarkSlateGray"); startCircle.attr("fill","url(#gradStartClick)"); })
+                              .on("end", function(){ startLine.attr("stroke", "LightSlateGray"); startCircle.attr("fill","url(#gradStartHover)");  updateMapMarkers();});
 startGuide.call(startGuideDrag);
 startCircle.call(startGuideDrag);
 startGuideDrag.on("drag",  dragStartPoint);
-var endGuideDrag = d3.drag().on("start", function(){ endLine.attr("stroke", "DarkSlateGray"); })
-                           .on("end", function(){ endLine.attr("stroke", "silver"); updateMapMarkers(); });
+startGuide.on("mouseover", function(d){
+  startCircle.attr("fill","url(#gradStartHover)");
+  startLine.attr("stroke", "LightSlateGray");
+})
+.on("mouseout", function(d){
+  startCircle.attr("fill","url(#gradStart)");
+  startLine.attr("stroke", "Silver");
+});
+
+var endGuideDrag = d3.drag().on("start", function(){ endLine.attr("stroke", "DarkSlateGray"); endCircle.attr("fill","url(#gradEndClick)");})
+                            .on("end", function(){ endLine.attr("stroke", "silver"); endCircle.attr("fill","url(#gradEndHover)"); updateMapMarkers(); });
 endGuide.call(endGuideDrag);
 endCircle.call(endGuideDrag);
 endGuideDrag.on("drag", dragEndPoint);
+endGuide.on("mouseover", function(d){
+  endCircle.attr("fill","url(#gradEndHover)");
+  endLine.attr("stroke", "LightSlateGray");
+})
+.on("mouseout", function(d){
+  endCircle.attr("fill","url(#gradEnd)");
+  endLine.attr("stroke", "Silver");
+});
+
 
 // Create a group for each timeline
 var singleLine = timelineChartGroup.append("g").attr("class", "single-timelines");
@@ -296,7 +399,7 @@ function updateTimeline(){
       .attr("class", "timeline-dots")
       .attr("r", (d)=>(radiusScale(d[1])))
       .attr("fill", allColor)
-      .attr("stroke", "snow")
+      .attr("stroke", "none")
       .on("mouseover", function(d){
 
         // Get the target data
@@ -308,19 +411,18 @@ function updateTimeline(){
 
         // Change the outline
         d3.select(this)
-          .attr("stroke", "MediumSpringGreen ")
-          .classed("active", true );
+          .attr("stroke", allColor)
+          .attr("stroke-width", "3.5");
         div3.transition()
             .duration(200)
             .style("opacity", .95);
         div3.html("Date" + ": " + target[0] + "<br>" +"# of Works" + ": " + target[1])
-            .style("left", mouseX+"px")
-            .style("top",  mouseY+"px");
+            .style("left", mouseX+5+"px")
+            .style("top",  mouseY-5+"px");
       })
       .on("mouseout", function(d){
         d3.select(this)
-          .attr("stroke", "snow")
-          .classed("active", false);
+          .attr("stroke", "none");
         div3.transition()
             .duration(500)
             .style("opacity", 0);
@@ -335,7 +437,6 @@ function updateTimeline(){
   startTopKnob.attr("cy", startOfTimelineY);
   startLowKnob.attr("cy", endOfTimelineY);
   startText.attr("y", startOfTimelineY - 7.5);
-
   endRect.attr("x", endOfTimelineX)
          .attr("y", startOfTimelineY)
          .attr("height", endOfTimelineY-startOfTimelineY);
@@ -351,10 +452,11 @@ function updateTimeline(){
 
   // Add the individual timeline lines
   var yInc = (yScale.range()[0]-yScale.range()[1])/(attributeTypes[currentAttribute].length+1);
-  let rInc = yInc*.85;
+  let rInc = yInc*.75;
   let startY = yScale.range()[0]-yInc;
   let duration = 750;
 
+  // Add the timeline lines
   singleLine.selectAll("rect")
             .data(Object.entries(datesByAttribute[currentAttribute]))
             .join(
@@ -391,10 +493,12 @@ function updateTimeline(){
                 exit => exit.remove()
               )
               .attr("id", function(t){return ("legend-rect-"+changeToDomId(t['label']))})
+              .attr("class", "legendRect")
               .attr("x", endOfTimelineX+25)
               .attr("height",rInc)
               .attr("width", rInc)
               .attr("stroke", (t)=>(t["color"]))
+              .attr("stroke-width", "2")
               .attr("fill", (t)=>(t["color"]))
               .on("click", target => {
 
@@ -427,6 +531,29 @@ function updateTimeline(){
 
                 currentMarkerSelection = undefined;
                 updateMapMarkers();
+              })
+              .on("mouseover", function(target){
+                // Change the outline of the rect
+                d3.select(this)
+                  .attr("stroke", (t)=>(t["color"]))
+                  .attr("stroke-width", "3.5");
+
+                // Get the domID to highlight the lengend text
+                let t = target.target.__data__;
+                let domID = changeToDomId(t['label']);
+                d3.select("#legend-text-"+domID).attr("font-size", "10pt");
+
+              })
+              .on("mouseout", function(target){
+                d3.select(this)
+                  .attr("stroke", (t)=>(t["color"]))
+                  .attr("stroke-width", "2");
+
+                // Get the domID to highlight the lengend text
+                let t = target.target.__data__;
+                let domID = changeToDomId(t['label']);
+                d3.select("#legend-text-"+domID).attr("font-size", "8pt");
+
               });
 
   // Add the legend text
@@ -449,9 +576,10 @@ function updateTimeline(){
     .attr("id", (t)=>("legend-text-"+changeToDomId(t['label'])))
     .attr("class", "timeline-text")
     .style("text-anchor", "right")
+    .attr("font-size", "8pt")
     .on("click", function(target){
 
-       // Get the domID
+      // Get the domID
       let t = target.target.__data__;
       let domID = changeToDomId(t['label']);
 
@@ -480,8 +608,15 @@ function updateTimeline(){
 
       currentMarkerSelection = undefined;
       updateMapMarkers();
+    })
+    .on("mouseover", function(d){
+      d3.select(this).attr("font-size", "10pt"); // Legend Text
+    })
+    .on("mouseout", function(d){
+        d3.select(this).attr("font-size", "8pt"); // Legend Text
     });
 
+  // Add the individual timeline circles
   singleLine.selectAll("g")
     .data(Object.entries(datesByAttribute[currentAttribute]))
     .join(
@@ -505,39 +640,39 @@ function updateTimeline(){
                       .selection(),
       exit =>  exit.remove()
   )
-  .attr("id",(d)=>("timeline-circles-"+changeToDomId(d[1]['type'])))
-  .attr("fill", (d)=>(d[1]['color']))
-  .on("mouseover", function(d){
-       // Get the target data
-       let target = d.target.__data__;
+    .attr("id",(d)=>("timeline-circles-"+changeToDomId(d[1]['type'])))
+    .attr("class", "timeline-dots")
+    .attr("fill", (d)=>(d[1]['color']))
+    .attr("stroke", "none")
+    .on("mouseover", function(d){
+         // Get the target data
+         let target = d.target.__data__;
 
-       // Set the location of the tooltip
-       let mouseX = d.clientX;
-       let mouseY = d.pageY-42;
+         // Set the location of the tooltip
+         let mouseX = d.clientX;
+         let mouseY = d.pageY-42;
 
-       // Change the outline
-       d3.select(this)
-           .attr("stroke", "MediumSpringGreen ")
-           .classed("active", true );
-       div3.transition()
-           .duration(200)
-           .style("opacity", .95);
-       div3.html("<b>Type:</b> "+ target[1]['type']+"<br> <b>Date:</b> " + target[0] + "<br> <b># of Works:</b> " + target[1]['count'])
-           .style("left", mouseX+"px")
-           .style("top",  mouseY+"px");
-       })
-  .on("mouseout", function(d){
+         // Change the outline
+         d3.select(this)
+             .attr("stroke", (d)=>(d[1]['color']))
+             .attr("stroke-width", "3.5");
+         div3.transition()
+             .duration(200)
+             .style("opacity", .95);
+         div3.html("<b>Type:</b> "+ target[1]['type']+"<br> <b>Date:</b> " + target[0] + "<br> <b># of Works:</b> " + target[1]['count'])
+             .style("left", mouseX+15+"px")
+             .style("top",  mouseY-10+"px");
+         })
+    .on("mouseout", function(d){
            d3.select(this)
-             .attr("stroke", "snow")
-             .classed("active", false);
+             .attr("stroke", "none");
            div3.transition()
-                     .duration(500)
-                     .style("opacity", 0);
-         });
+               .duration(500)
+               .style("opacity", 0);
+       });
 
-         // Attach the xAxis
-         axisGroup.call(xAxis);
-
+   // Attach the xAxis
+   axisGroup.call(xAxis);
 }
 
 // Set the position and text of start guide

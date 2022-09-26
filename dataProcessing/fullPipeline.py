@@ -13,7 +13,9 @@
 from pathlib import Path
 import geoCodeExcel
 import wiggleLocations
-import xlsx2json
+import data2json
+import sys
+
 
 def full_pipeline(file):
 
@@ -30,12 +32,14 @@ def full_pipeline(file):
     wiggleLocations.wiggleLocations(geo_outfile)
 
     # Get the wiggle location outfile
-    wiggle_outfile = tr(filename.with_suffix(''))+"_geocoded_wiggle"+str(filename.suffix)
+    wiggle_outfile = str(filename.with_suffix(''))+"_geocoded_wiggle"+str(filename.suffix)
+
+
 
     # Convert to json
-    xlsx2json.make_json(wiggle_outfile)
+    data2json.make_json(wiggle_outfile)
 
-    
+
 if __name__ == '__main__':
 
     if(len(sys.argv) < 2):

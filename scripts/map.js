@@ -172,7 +172,7 @@ for(let att in iconMap){
 // Create all of the marker layers on intialize
 var markerClusterArrays = {};
 for(d in data){
-
+  //console.log("d", data[d]);
   // Add markers in both the buildings and client layers
   for(a in attributes){
     let att = attributes[a];
@@ -188,14 +188,18 @@ for(d in data){
     if(!(markerClusterArrays[att][date][type]))
       markerClusterArrays[att][date][type]=[];
 
-    let lat = data[d]['Lat'];
-    let lon = data[d]['Lon'];
+    //console.log("data", data[d])
+
+    let lat = data[d]['Latitude'];
+    let lon = data[d]['Longitude'];
+    if(lat == undefined)
+      console.log("not found",d, data[d]['Name'], data[d]['Location']);
     let marker = L.marker([lat,lon],
                           {icon: preDefinedMarkers[att][type]},
                           {title: data[d]['Name']}).on('click',function(e) {
                             let marker = e.target;
                             popup.setContent(marker.desc);
-                            popup.setLatLng([marker.data.Lat, marker.data.Lon]);//marker.getLatLng());
+                            popup.setLatLng([marker.data.Latitude, marker.data.Longitude]);
                             map.openPopup(popup);
 
                             // Save the current marker

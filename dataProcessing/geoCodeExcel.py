@@ -15,15 +15,21 @@ import pandas as pd
 import requests
 import urllib.parse
 from pathlib import Path
+from geopy.geocoders import Nominatim
+import time
 
 def geoCodeExcel(file, sheetname):
+
+    # initialize Nominatim API
+    geolocator = Nominatim(user_agent="PRWGeoEncode")
 
     # Get the filename and the outfile name
     filename = Path(file)
     outfile = str(filename.with_suffix(''))+"_geocoded"+str(filename.suffix)
+    addressesNotFoundFile = str(filename.parent)+"/addressesNotFound.txt"
 
     # Read in the data
-    df = pd.read_excel(file, sheet_name=sheetname)
+    df = pd.read_excel(file, sheet_name=sheetname, engine='openpyxl')
 
     # If we have sheets and none is specified, process only the first
     if isinstance(df, dict):
@@ -43,44 +49,98 @@ def geoCodeExcel(file, sheetname):
     df['Date (KEH)'] = df['Date (KEH)'].astype(str)
 
     # Add new lat/lon columns
-    df['Generated Lat'] = ""
-    df['Generated Lon'] = ""
+    df['Latitude'] = ""
+    df['Longitude'] = ""
+
+    # Add the city, state, country
+    df['city'] = ""
+    df['county'] = ""
+    df['state'] = ""
+    df['country'] = ""
+
+    # Notes on the whole response and if the address is found
+    df['response'] = ""
+    df['not found'] = ""
 
     # Save the addresses that aren't found
     not_found = []
 
     # Iterate over the dataframe
     for index, row in df.iterrows():
+        #row = df.iloc[150]
 
-        # Get the address
+        # Get the address from the spreadsheet
         address = row['Location']
-        print("Address: ", address)
+        print("Address: ", address, "("+str(index)+")")
 
-        # Get the lat/lon response
-        url = 'https://nominatim.openstreetmap.org/search/' + urllib.parse.quote(address) +'?format=json'
-        response = requests.get(url).json()
+        # Using Nominatim (via openstreetmap), find the address
+        location = geolocator.geocode(address)
 
-        if(len(response) == 0):
+        # If the address is not found, note that
+        if location == None:
             print("Address not found: ", address)
-            df.at[index,'Generated Lat'] = row["Lat"]
-            df.at[index,'Generated Lon'] = row["Lon"]
+            df.at[index, 'not found'] = "not found"
             not_found.append(address)
+
+            # While we don't have a location, peel off the address until we do
+            newAddress = address
+            while location == None:
+
+                # Try to find the city, country
+                newAddress = newAddress.split(" ", 1)[1]
+
+                # Using Nominatim (via openstreetmap), find the address
+                location = geolocator.geocode(newAddress, timeout=None)
+                time.sleep(2)
+            print("new location", location)
+        # Save the coordinates
+        df.at[index,'Latitude'] = location.latitude
+        df.at[index,'Longitude'] = location.longitude
+
+        # Reverse lookup to get all info at that lat/lon
+        locDetail = geolocator.reverse(str(location.latitude)+","+str(location.longitude)).raw['address']
+
+        # Save all info on this location
+        df.at[index, 'response'] = locDetail
+
+        # Save info to sort by
+        if('city' in locDetail.keys()):
+            df.at[index, "city"] = locDetail['city']
+        elif ('hamlet' in locDetail.keys()):
+            df.at[index, "city"] = locDetail['hamlet']
+        elif ('village' in locDetail.keys()):
+            df.at[index, "city"] = locDetail['village']
+        elif ('suburb' in locDetail.keys()):
+            df.at[index, "city"] = locDetail['suburb']
+        elif ('town' in locDetail.keys()):
+            df.at[index, "city"] = locDetail['town']
         else:
-            #print(response[0]["lat"], response[0]["lon"])
-            df.at[index,'Generated Lat'] = response[0]["lat"]
-            df.at[index,'Generated Lon'] = response[0]["lon"]
+            df.at[index, "city"] = ""
+
+        if('county' in locDetail.keys()):
+            df.at[index, "county"] = locDetail['county']
+        else:
+            df.at[index, "county"] = ""
+
+        if('state' in locDetail.keys()):
+            df.at[index, "state"] = locDetail['state']
+        else:
+            df.at[index, "state"] = ""
+        df.at[index, "country"] = locDetail['country']
+
+        #break
 
     # Convert the generated lat/lon columns to numbers
-    df['Generated Lat'] = pd.to_numeric(df['Generated Lat'])
-    df['Generated Lon'] = pd.to_numeric(df['Generated Lon'])
-
+    df['Latitude'] = pd.to_numeric(df['Latitude'])
+    df['Longitude'] = pd.to_numeric(df['Longitude'])
 
     # Write to a new excel file
     df.to_excel(outfile)
+    print("Wrote to:", outfile)
 
     # Write out any addresses not found
     if(len(not_found) > 0):
-        textfile = open("addressesNotFound.txt", "w")
+        textfile = open(addressesNotFoundFile, "w")
         for element in not_found:
             textfile.write(element + "\n")
         textfile.close()
