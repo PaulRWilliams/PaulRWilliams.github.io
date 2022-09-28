@@ -9,7 +9,7 @@
 // - -- -- - - --- - -- - - --- - ---- -- --- -- - -- -  //
 
 // The columns we are interested in
-const infoTableCols = ["Name", "Date", "Location", "Client", "Building Type", "Client Type", "Status", "Style", "Notes", "Sources"];
+const infoTableCols = ["Name", "Date", "Location", "Client", "Building Type", "Client Type", "city", "state", "country", "Status", "Style", "Notes", "Sources"];
 
 // Create the table
 infoTable = d3.select("#info-table")

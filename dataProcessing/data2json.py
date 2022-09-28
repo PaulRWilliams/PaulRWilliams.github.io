@@ -30,6 +30,9 @@ def make_json(file):
     df = df.dropna(how='all')
     print("Number of valid rows: ",df.shape[0])
 
+    # Strip leading and trailing white space from column names
+    df.columns = df.columns.str.strip()
+
     # Convert columns to the right data type
     df['Date'] = df['Date'].astype(int)
     df['Latitude'] = df['Latitude'].astype(float)
@@ -37,7 +40,7 @@ def make_json(file):
 
     #  Convert to json
     df = df.to_json(orient='records')
-
+    
     # Get the filename and the outfile name
     filename = Path(file)
     outfile = str(filename.parent.parent)+"/data.js"

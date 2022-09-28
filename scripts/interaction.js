@@ -142,6 +142,18 @@ function updateMapMarkers(){
   updateRemoteList();
 }
 
+// Zoom to the lat/lon of this area
+function zoomMap(name){
+
+    // Find the item in the data based on the name
+    let item  = data.find(el=>el.Name == name);
+
+    // Zoom to the location
+    map.setZoom(16);
+    map.panTo(new L.LatLng(item.Latitude, item.Longitude));
+
+}
+
 // - -- -- - - --- - -- - - --- - ---- -- --- -- - -- -  //
 // List
 // - -- -- - - --- - -- - - --- - ---- -- --- -- - -- -  //
@@ -282,6 +294,40 @@ function sortTable(colnum) {
 }
 
 // Update the tables
+function findMarker(name){
+  // Find the item in the data based on the name
+  let item  = data.find(el=>el.Name == name);
+
+  // Get the date and type
+  let date = item.Date;
+  let type = item[currentAttribute]
+
+  // Find the marker in the saved cluster array
+  let marker = undefined;
+
+  // Iterate over the markers
+  for(i in currentMarkers){
+
+    // Filter the current markers by date
+    let cDate = currentMarkers[i][0].data.Date;
+
+    // If this isn't the date we are looking for, move on
+    if(cDate !== date)
+      continue;
+    else{
+      let cType = currentMarkers[i][0].data[currentAttribute];
+      if(cType !== type)
+        continue;
+      else{
+        for(j in currentMarkers[i]){
+          let cName = currentMarkers[i][j].data.Name;
+          if(name === cName)
+            return currentMarkers[i][j];
+        }
+      }
+    }
+  }
+}
 function updateRemoteList(){
 
   if(newWindow === undefined)
@@ -320,7 +366,6 @@ function updateRemoteList(){
                 .attr("class", "is-size-7");
 
 }
-
 function updateList (){
 
   // Iterate over the current markers
@@ -330,8 +375,6 @@ function updateList (){
       currentData.push(currentMarkers[i][j].data);
     }
   }
-
-
   // Add the rows and columns to the info table
   let info_rows = infoTableBody.selectAll("tr")
                      .data(currentData)
@@ -340,7 +383,18 @@ function updateList (){
                        enter => enter.append("tr"),
                        update => update,
                        exit => exit.remove()
-                     );
+                     )
+                     .on("click", function(d) {
+
+                       // Get the name from the node id
+                       let name = d.target.parentNode.id;
+                       let marker = findMarker(name);
+
+                       // Zoom the map and click the marker
+                       zoomMap(name);
+                       marker.fire('click');
+
+                     });
  let info_cells = info_rows.selectAll("td")
             // each row has data associated; we get it and enter it for the cells.
                 .data(function(d) {
