@@ -45,8 +45,8 @@ def geoCodeExcel(file, sheetname):
 
     # Convert columns to the right data type
     df['Date'] = df['Date'].astype(str)
-    df['Date (PWP)'] = df['Date (PWP)'].astype(str)
-    df['Date (KEH)'] = df['Date (KEH)'].astype(str)
+    #df['Date (PWP)'] = df['Date (PWP)'].astype(str)
+    #df['Date (KEH)'] = df['Date (KEH)'].astype(str)
 
     # Add new lat/lon columns
     df['Latitude'] = ""
@@ -67,7 +67,7 @@ def geoCodeExcel(file, sheetname):
 
     # Iterate over the dataframe
     for index, row in df.iterrows():
-        #row = df.iloc[150]
+        #row = df.iloc[100]
 
         # Get the address from the spreadsheet
         address = row['Location']
@@ -129,7 +129,7 @@ def geoCodeExcel(file, sheetname):
         df.at[index, "country"] = locDetail['country']
 
         #break
-
+    #sys.exit()
     # Convert the generated lat/lon columns to numbers
     df['Latitude'] = pd.to_numeric(df['Latitude'])
     df['Longitude'] = pd.to_numeric(df['Longitude'])

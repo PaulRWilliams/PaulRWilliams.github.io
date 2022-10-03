@@ -8,6 +8,29 @@
 // Button actions
 // - -- -- - - --- - -- - - --- - ---- -- --- -- - -- -  //
 
+function closeRemoteWindow(){
+
+  // Change the button text
+  document.getElementById("openButton").innerHTML = '<span class="icon is-small"><i class="fas fa-window-restore" aria-hidden="true"></i></span> <span>Open Table in New Window</span>';
+
+  // Get the table DOM and show
+  var table = document.querySelector('#info-table');
+  table.style.display = 'block';
+
+  // Shrink the map
+  var map = document.getElementById('map-column');
+  map.classList.add("is-6");
+  map.classList.remove("is-full");
+  console.log("unexpamd");
+
+  if(currentMarkerSelection !== undefined){
+    console.log("CMS", currentMarkerSelection);
+    currentMarkerSelection.fire('click');
+    zoomMap(currentMarkerSelection.data.Name);
+    scroll2Row();
+  }
+}
+
 // Open new window on button click
 document.getElementById("openButton").addEventListener("click", function(){
 
@@ -28,6 +51,15 @@ document.getElementById("openButton").addEventListener("click", function(){
     tableClone.classList.remove("kp-table");
     tableClone.classList.add("kp-table-remote");
 
+    // Hide the local table
+    table.style.display = 'none';
+
+    // Expand the map
+
+    var map = document.getElementById('map-column');
+    map.classList.remove("is-6");
+    map.classList.add("is-full");
+
     // Open a new window
     newWindow = window.open("", "", "width=1200,height=670");
 
@@ -46,63 +78,42 @@ document.getElementById("openButton").addEventListener("click", function(){
      th.addEventListener(`click`, evt => sortRemoteTable(position));
     });
 
-    // Hide the table
-    table.style.display = 'none';
+    // Listen for the click to highlight a row
+    newWindow.document.querySelectorAll(`tr`).forEach((th, position) => {
+     th.addEventListener(`click`, function(d) {
 
-    // Expand the map
-    var map = document.getElementById('map-column');
-    map.classList.remove("is-6");
-    map.classList.add("is-full");
+       // Get the name from the node id
+       let name = d.target.parentNode.id;
+       let marker = findMarker(name);
+
+       // Zoom the map and click the marker
+       zoomMap(name);
+       marker.fire('click');
+     })
+    });
+
 
     // Put the table back if we close this new window
     newWindow.addEventListener("beforeunload", function (e) {
-
-      // Change the button text
-      document.getElementById("openButton").innerHTML = '<span class="icon is-small"><i class="fas fa-window-restore" aria-hidden="true"></i></span> <span>Open Table in New Window</span>';
-
-      // Get the table DOM and show
-      var table = document.querySelector('#info-table');
-      table.style.display = 'block';
-
-      // Shrink the map
-      var map = document.getElementById('map-column');
-      map.classList.add("is-6");
-      map.classList.remove("is-full")
-
-      // Listen for click to sort the table
-      document.querySelectorAll(`th`).forEach((th, position) => {
-       th.addEventListener(`click`, evt => sortTable(position));
-      });
-
+      closeRemoteWindow()
     });
 
-    // Scroll to the selected row
-    scroll2RowRemote();
+    // Trigger the marker if we have one to scroll to the visible table to the row
+    if(currentMarkerSelection !== undefined)
+      currentMarkerSelection.fire('click');
   }
 
   //--  Close the new window --//
   else{
 
-    // Change the button text
-    document.getElementById("openButton").innerHTML = '<span class="icon is-small"><i class="fas fa-window-restore" aria-hidden="true"></i></span> <span>Open Table in New Window</span>';
-
     // Close the window
     newWindow.close();
 
-    // Get the table DOM and show
-    var table = document.querySelector('#info-table');
-    table.style.display = 'block';
+    // Actions after the window is closed
+    closeRemoteWindow()
 
-    // Shrink the map
-    var map = document.getElementById('map-column');
-    map.classList.add("is-6");
-    map.classList.remove("is-full")
-
-    // Listen for click to sort the table
-    document.querySelectorAll(`th`).forEach((th, position) => {
-     th.addEventListener(`click`, evt => sortTable(position));
-    });
   }
+
    // Update the number of clicks
    openWindowButtonClicks = openWindowButtonClicks+1;
 });
@@ -145,13 +156,11 @@ function updateMapMarkers(){
 // Zoom to the lat/lon of this area
 function zoomMap(name){
 
-    // Find the item in the data based on the name
-    let item  = data.find(el=>el.Name == name);
+  // Find the item in the data based on the name
+  let item  = data.find(el=>el.Name == name);
 
-    // Zoom to the location
-    map.setZoom(16);
-    map.panTo(new L.LatLng(item.Latitude, item.Longitude));
-
+  // Fly to the location
+  map.flyTo([item.Latitude, item.Longitude], 14, {duration: 1});
 }
 
 // - -- -- - - --- - -- - - --- - ---- -- --- -- - -- -  //
@@ -188,6 +197,7 @@ function scroll2Row(){
 
   // Highlight the clicked element
   var elm = document.getElementById(currentMarkerSelection.data.Name);
+  console.log("scroll2Row", elm);
   elm.scrollIntoView({
       behavior: 'smooth',
       block: 'center'
@@ -228,8 +238,6 @@ function compareValues(a, b) {
   return (a<b) ? -1 : (a>b) ? 1 : 0;
 }
 function sortRemoteTable(colnum){
-
-
 
   // Get the table
   var table = newWindow.document.getElementById("list-table-remote");
@@ -297,6 +305,7 @@ function sortTable(colnum) {
 function findMarker(name){
   // Find the item in the data based on the name
   let item  = data.find(el=>el.Name == name);
+  console.log("309 item", item);
 
   // Get the date and type
   let date = item.Date;
@@ -352,7 +361,7 @@ function updateRemoteList(){
                        update => update,
                        exit => exit.remove()
                      );
- let info_cells = info_rows.selectAll("td")
+  let info_cells = info_rows.selectAll("td")
             // each row has data associated; we get it and enter it for the cells.
                 .data(function(d) {
                     let row = infoTableCols.map(x => d[x]);

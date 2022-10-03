@@ -34,8 +34,6 @@ def full_pipeline(file):
     # Get the wiggle location outfile
     wiggle_outfile = str(filename.with_suffix(''))+"_geocoded_wiggle"+str(filename.suffix)
 
-
-
     # Convert to json
     data2json.make_json(wiggle_outfile)
 
